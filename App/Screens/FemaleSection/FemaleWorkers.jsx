@@ -1,0 +1,134 @@
+import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from "react-native";
+import womanWorkers from "../../../assets/Images/Photos/womanWorkers.jpeg";
+import React, { useContext } from "react";
+import { UserContext } from "../../store/UserContext";
+import { useNavigation } from "@react-navigation/native";
+import Colors from "../../Utils/Colors";
+
+export default function FemaleWorkers() {
+  const { barbers, setSelectedBarber } = useContext(UserContext);
+  const API_URL = process.env.REACT_NATIVE_API_URL;
+  const navigation = useNavigation();
+
+  const handleBarberClick = async (id) => {
+    const selectedBarberFromHome = barbers.find((barber) => barber.id === id);
+    await setSelectedBarber(selectedBarberFromHome);
+    navigation.navigate("TabNavigation", { screen: "booking" });
+  };
+
+  return (
+    <View style={{ flex: 1, marginTop: 30 }}>
+      <Text
+        style={{
+          color: "black",
+          textAlign: "center",
+          fontSize: 26,
+          fontFamily: "outfit-m",
+        }}
+      >
+        Zgjedhni një Specialist
+      </Text>
+      {/* <FlatList
+        data={barbers}
+        horizontal={false}
+        style={{ marginTop: 20 }}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity onPress={() => handleBarberClick(item.id)}>
+          <View
+            style={{
+              marginBottom: 20,
+              shadowColor: Colors.GOLD,
+              shadowOffset: { width: 1, height: 1 },
+              shadowOpacity: 1,
+              shadowRadius: 2,
+              elevation: 2,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: Colors.WHITE,
+                padding: 10,
+                borderRadius: 6,
+              }}
+            >
+              <Image
+                source={{ uri: API_URL + item.avatar }}
+                style={{
+                  height: 120,
+                  width: 120,
+                  borderRadius: 6,
+                  marginRight: 20,
+                }}
+              />
+              <View>
+                <Text
+                  style={{
+                    color: Colors.GOLD,
+                    fontFamily: "outfit-r",
+                    fontSize: 20,
+                  }}
+                >
+                  {item.name}
+                {"\n"}({item.phone})
+                </Text>
+        
+              </View>
+            </View>
+          </View>
+          </TouchableOpacity>
+        )}
+      /> */}
+            <ScrollView style={{ marginTop: 20 }}>
+        {barbers.map((item, index) => (
+          <TouchableOpacity key={item.id} onPress={() => handleBarberClick(item.id)}>
+            <View
+              style={{
+                marginBottom: 20,
+                shadowColor: Colors.GOLD,
+                shadowOffset: { width: 1, height: 1 },
+                shadowOpacity: 1,
+                shadowRadius: 2,
+                elevation: 2,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: Colors.WHITE,
+                  padding: 10,
+                  borderRadius: 6,
+                }}
+              >
+                <Image
+                  source={{ uri: API_URL + item.avatar }}
+                  style={{
+                    height: 120,
+                    width: 120,
+                    borderRadius: 6,
+                    marginRight: 20,
+                  }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      color: Colors.GOLD,
+                      fontFamily: 'outfit-r',
+                      fontSize: 20,
+                    }}
+                  >
+                    {item.name}
+                    {'\n'}({item.phone})
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
