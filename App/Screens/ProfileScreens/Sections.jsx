@@ -5,6 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import axiosClient from "../../axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "../../store/UserContext";
+import RNPusherPushNotifications from 'react-native-pusher-push-notifications';
 import { useNavigation } from "@react-navigation/native";
 
 export default function Sections() {
@@ -26,6 +27,14 @@ export default function Sections() {
   const logout = async () => {
     try {
       const response = await axiosClient.post("/api/logout");
+
+      RNPusherPushNotifications.clearAllState((error) => {
+        if (error) {
+          console.error('Error clearing Pusher state:', error);
+        } else {
+          console.log('Successfully cleared Pusher state');
+        }
+      });
 
       await AsyncStorage.removeItem("token");
       await AsyncStorage.removeItem("user");
@@ -114,7 +123,7 @@ export default function Sections() {
             fontFamily: "outfit-b",
           }}
         >
-          Sign out
+          Dil
         </Text>
       </TouchableOpacity>
     </View>

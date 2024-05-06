@@ -27,9 +27,6 @@ const ChatAppointmentProvider = ({ children }) => {
   //Subscribing to Pusher Beam , Pusher Notification , Pusher JS
   const subscribeToPusherBeam = async () => {
     if (user) {
-      const newChannel = `barber_${user.id}`;
-      const newChannel2 = `chat_${user.id}`;
-
       //getting the stored subscription data
       const storedSubscriptionData = await AsyncStorage.getItem(
         "subscriptionData"
@@ -43,8 +40,8 @@ const ChatAppointmentProvider = ({ children }) => {
       try {
         //Connecting to pusher beam and subscribing to channel
         connectPusherBeam(
-          newChannel,
-          newChannel2,
+          `barber_${user.id}`,
+          `chat_${user.id}`,
           user.id,
           parsedSubscriptionData
         );

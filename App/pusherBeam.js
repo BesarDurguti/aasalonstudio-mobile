@@ -1,9 +1,20 @@
 import { Platform } from "react-native";
 import RNPusherPushNotifications from "react-native-pusher-push-notifications";
 import { handleNotificationPusher } from "./PusherNotification";
+import axiosClient from "./axios";
 ///////////////////Pusher Beam/////////////////////
 
-const connectPusherBeam = (
+
+function onPusherInitError(statusCode, response) {
+  console.log('Error: PUSHER statusCode: ', statusCode);
+  console.log('Error: PUSHER response: ', response);
+}
+
+function onPusherInitSuccess(response) {
+  console.log('PUSHER SUCCESS: ', response);
+}
+
+const connectPusherBeam = async (
   interest,
   interest2,
   userId,
@@ -11,16 +22,36 @@ const connectPusherBeam = (
 ) => {
   RNPusherPushNotifications.setInstanceId(process.env.PUSHER_INSTANCE_ID);
 
-  if (!parsedSubscriptionData || parsedSubscriptionData.userId !== userId) {
     RNPusherPushNotifications.on("registered", () => {
       subscribe(interest);
       subscribe(interest2);
     });
-  }
+
+    const res = await axiosClient.get('/api/pusher/beams-auth',{
+      params:{
+        user_id: userId
+      }
+    });
+    const {token} = res.data;
+
+    setUser(`user-${userId}`, token, onPusherInitError, onPusherInitSuccess)
 
   // Setup notification listeners
   RNPusherPushNotifications.on("notification", handleNotification);
 };
+
+function setUser(userId, token,onError, onSuccess){
+  RNPusherPushNotifications.setUserId(
+    userId,
+    token,
+    (statusCode, response) => {
+      onError(statusCode, response);
+    },
+    () => {
+      onSuccess('Set User ID Success');
+    }
+  );
+}
 
 const handleNotification = async (notification) => {
   if (!global.isChatScreenFocused) {
@@ -28,10 +59,7 @@ const handleNotification = async (notification) => {
     if (Platform.OS === "ios") {
       console.log("CALLBACK: handleNotification (ios)");
     } else {
-      console.log(
-        "CALLBACK: handleNotification (android)",
-        global.isChatScreenFocused
-      );
+      console.log(notification);
       handleNotificationPusher(notification);
     }
   }
@@ -39,7 +67,6 @@ const handleNotification = async (notification) => {
 
 // Subscribe to an interest
 const subscribe = (interest) => {
-  console.log(`Subscribing to "${interest}"`);
   RNPusherPushNotifications.subscribe(
     interest,
     (statusCode, response) => {

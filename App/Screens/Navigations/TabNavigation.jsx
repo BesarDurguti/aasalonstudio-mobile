@@ -68,7 +68,7 @@ export default class TabNavigation extends Component {
             ),
           }}
         />
-
+{/* 
         <Tab.Screen
           name="MapScreen"
           component={MapScreen}
@@ -82,7 +82,7 @@ export default class TabNavigation extends Component {
               <Feather name="map" size={size} color={color} />
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="products"
           component={ProductComponent}
