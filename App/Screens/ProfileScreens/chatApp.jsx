@@ -162,6 +162,19 @@ const ChatScreen = () => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    // Add event listener for keyboard opening
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => scrollViewRef.current.scrollToEnd({ animated: true })
+    );
+
+    // Cleanup function
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}

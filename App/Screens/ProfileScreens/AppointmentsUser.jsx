@@ -43,11 +43,10 @@ const AppointmentsUser = () => {
 
       if (response.data != "") {
         setAppointments(response.data);
-        console.log("Successfully fetched data", response.data);
+
         setError("");
       } else {
         // Handle login failure
-        console.log("No appointments found:", response.data);
         // setError('No appointments found.');
       }
     } catch (err) {
@@ -99,7 +98,6 @@ const AppointmentsUser = () => {
           `/api/cancelAppointment/${appointment.id}`
         );
         if (response.data.success) {
-          console.log("Successfully canceled the appointment.", response.data);
           setSuccess("Successfully canceled the appointment.");
           appointmentsUserFetch();
         }

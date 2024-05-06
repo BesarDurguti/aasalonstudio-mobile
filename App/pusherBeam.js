@@ -4,14 +4,13 @@ import { handleNotificationPusher } from "./PusherNotification";
 import axiosClient from "./axios";
 ///////////////////Pusher Beam/////////////////////
 
-
 function onPusherInitError(statusCode, response) {
-  console.log('Error: PUSHER statusCode: ', statusCode);
-  console.log('Error: PUSHER response: ', response);
+  console.log("Error: PUSHER statusCode: ", statusCode);
+  console.log("Error: PUSHER response: ", response);
 }
 
 function onPusherInitSuccess(response) {
-  console.log('PUSHER SUCCESS: ', response);
+  console.log("PUSHER SUCCESS: ", response);
 }
 
 const connectPusherBeam = async (
@@ -22,25 +21,24 @@ const connectPusherBeam = async (
 ) => {
   RNPusherPushNotifications.setInstanceId(process.env.PUSHER_INSTANCE_ID);
 
-    RNPusherPushNotifications.on("registered", () => {
-      subscribe(interest);
-      subscribe(interest2);
-    });
+  RNPusherPushNotifications.on("registered", () => {
+    subscribe(interest);
+    subscribe(interest2);
+  });
 
-    const res = await axiosClient.get('/api/pusher/beams-auth',{
-      params:{
-        user_id: userId
-      }
-    });
-    const {token} = res.data;
-
-    setUser(`user-${userId}`, token, onPusherInitError, onPusherInitSuccess)
+  const res = await axiosClient.get("/api/pusher/beams-auth", {
+    params: {
+      user_id: userId,
+    },
+  });
+  const { token } = res.data;
+  setUser(`user-${userId}`, token, onPusherInitError, onPusherInitSuccess);
 
   // Setup notification listeners
   RNPusherPushNotifications.on("notification", handleNotification);
 };
 
-function setUser(userId, token,onError, onSuccess){
+function setUser(userId, token, onError, onSuccess) {
   RNPusherPushNotifications.setUserId(
     userId,
     token,
@@ -48,7 +46,7 @@ function setUser(userId, token,onError, onSuccess){
       onError(statusCode, response);
     },
     () => {
-      onSuccess('Set User ID Success');
+      onSuccess("Set User ID Success");
     }
   );
 }
