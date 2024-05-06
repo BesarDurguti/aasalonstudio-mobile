@@ -23,7 +23,7 @@ const DateTimeSelection = () => {
   const [selectedTimeBtn, setSelectedTimeBtn] = useState("");
   const [disabledDates, setDisabledDates] = useState({});
   const [bookedDates, setBookedDates] = useState([]);
-  const [dateTimeErr, setDateTimeErr] = useState('');
+  const [dateTimeErr, setDateTimeErr] = useState("");
   const maxDate = format(addMonths(new Date(), 1), "yyyy-MM-dd");
   const minDate = format(new Date(), "yyyy-MM-dd");
 
@@ -67,6 +67,23 @@ const DateTimeSelection = () => {
           setDisabledDates({});
         }
 
+        // Create a new date object for 'today'
+        let currentDate = new Date();
+
+        // Format the current date
+        let formattedDate = format(currentDate, "yyyy-MM-dd");
+
+        // While the current date is in the disabled dates, increment the date by one day
+        while (
+          disabledDatesResponse.some((item) => item.date === formattedDate)
+        ) {
+          currentDate.setDate(currentDate.getDate() + 1);
+          formattedDate = format(currentDate, "yyyy-MM-dd");
+        }
+
+        // Set the date state to the next available date
+        setDate(formattedDate);
+
         setBookedDates(response.data.bookingDates);
       } catch (error) {
         console.error("Error fetching booking dates:", error);
@@ -77,12 +94,11 @@ const DateTimeSelection = () => {
   }, [selectedBarber]);
 
   useEffect(() => {
-  
     if (disabledDates[date]) {
       let currentDate = new Date(date);
       let nextDate = new Date(currentDate);
       nextDate.setDate(nextDate.getDate() + 1);
-  
+
       // If the next date is also disabled, set the date to the day after
       if (disabledDates[format(nextDate, "yyyy-MM-dd")]) {
         nextDate.setDate(nextDate.getDate() + 1);
@@ -114,7 +130,7 @@ const DateTimeSelection = () => {
     setSelectedTimeBtn("");
     setSelectedDate(null);
     setShowModal(false); // Hide the modal
-    setDateTimeErr('');
+    setDateTimeErr("");
   };
 
   const handleConfirm = () => {
@@ -124,9 +140,9 @@ const DateTimeSelection = () => {
       setSelectedDate(formattedDate);
       setShowModal(false);
       setText("Dita: " + formattedDate + ", Ora: " + timeAppointment);
-      setDateTimeErr('');
+      setDateTimeErr("");
     } else {
-      setDateTimeErr('Ju lutem zgjidhni datën dhe kohën!');
+      setDateTimeErr("Ju lutem zgjidhni datën dhe kohën!");
     }
   };
 
@@ -212,10 +228,13 @@ const DateTimeSelection = () => {
               />
               <View style={style.timeSlotsContainer}>
                 {renderTimeButtons()}
-                {dateTimeErr ? 
-                <Text style={{ color:'red', fontWeight:'bold' }}>{dateTimeErr}</Text>
-                : 
-                ''}
+                {dateTimeErr ? (
+                  <Text style={{ color: "red", fontWeight: "bold" }}>
+                    {dateTimeErr}
+                  </Text>
+                ) : (
+                  ""
+                )}
               </View>
               <View style={style.buttonContainer}>
                 <View style={style.buttonWrapper}>
