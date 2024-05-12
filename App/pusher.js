@@ -9,7 +9,7 @@ const connect = async (tokenParam, channelNameProp, onEventCallback) => {
   token = tokenParam;
   try {
     await pusher.init({
-      apiKey: "32b83f3894b7f0828d2c",
+      apiKey: "4b55b04be5870ea90e72",
       cluster: "eu",
       onAuthorizer,
       onError,

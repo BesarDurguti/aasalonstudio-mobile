@@ -22,8 +22,9 @@ const connectPusherBeam = async (
   RNPusherPushNotifications.setInstanceId(process.env.PUSHER_INSTANCE_ID);
 
   RNPusherPushNotifications.on("registered", () => {
-    subscribe(interest);
-    subscribe(interest2);
+    // subscribe(interest);
+    // subscribe(interest2);
+    // subscribe("hello");
   });
 
   const res = await axiosClient.get("/api/pusher/beams-auth", {
