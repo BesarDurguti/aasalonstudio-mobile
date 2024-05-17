@@ -27,21 +27,6 @@ const FemaleServiceSelection = () => {
   const [services, setServices] = useState(servicesMap);
   
 
-  // useEffect(() => {
-  //   setValue(selectedService.id);
-  //   setSelectedService(selectedService);
-  // }, [selectedService]);
-
-  // useEffect(() => {
-  //   if (value) {
-  //     const selectedServiceFromDropdown = contextServices.find(
-  //       (c) => c.id === value
-  //     );
-  //     setSelectedService(selectedServiceFromDropdown);
-  //   }
-  // }, [value]);
-  // console.log(selectedService);
-  //new part of code
   useEffect(() => {
     setSelectedService(value.map(serviceId => contextServices.find(service => service.id === serviceId)));
   }, [value, contextServices, setSelectedService]);
@@ -75,6 +60,15 @@ const FemaleServiceSelection = () => {
     return service ? `${service.name} - ${service.price}€` : '';
   });
 
+  const [marginServices, setMarginServices] = useState(50);
+  const [marginBarbers, setMarginBarbers] = useState(50);
+
+  useEffect(() => {
+    const countBarbers = contextBarbers.length;
+    const countServices = contextServices.length;
+    setMarginServices(countServices * 50);
+    setMarginBarbers(countBarbers * 50);
+  }, [contextBarbers, contextServices]);
 
     return (
       <View style={{ marginTop: 50 }}>
@@ -86,7 +80,7 @@ const FemaleServiceSelection = () => {
               fontFamily: "outfit-b",
             }}
           >
-            Zgjedh berberin
+            Zgjedh Specialisten
           </Text>
           <DropDownPicker
             placeholder=""
@@ -96,7 +90,12 @@ const FemaleServiceSelection = () => {
             setOpen={setOpenBarberDropdown}
             setValue={setValueBarer}
             setItems={setBarbers}
-            style={[style.dropdown, openBarberDropdown && style.dropdownWithMargin]}
+            style={[
+              style.dropdown,
+              openBarberDropdown && {
+                marginBottom: marginBarbers,
+              },
+            ]}
             textStyle={style.textStyle}
             dropDownContainerStyle={style.dropdown}
           />
@@ -119,7 +118,12 @@ const FemaleServiceSelection = () => {
           setOpen={setOpenServiceDropdown}
           setValue={setValue}
           setItems={setServices}
-          style={[style.dropdown, openServiceDropdown && style.dropdownWithMargin]}
+          style={[
+            style.dropdown,
+            openServiceDropdown && {
+              marginBottom: marginServices,
+            },
+          ]}
           textStyle={style.textStyle}
           dropDownContainerStyle={style.dropdownDrop}
           multiple={true}
