@@ -130,6 +130,7 @@ const ServiceSelection = () => {
         dropDownContainerStyle={style.dropdownDrop}
         multiple={true}
         multipleText={formattedValue.join(", ")}
+        tickColor="#ff0000" 
       />
     </View>
   );

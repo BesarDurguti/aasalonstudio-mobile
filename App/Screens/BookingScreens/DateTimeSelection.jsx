@@ -152,7 +152,7 @@ const DateTimeSelection = () => {
     const currentTime = new Date();
     const today = format(currentTime, "yyyy-MM-dd");
 
-    for (let hour = 8; hour < 24; hour++) {
+    for (let hour = 9; hour < 21; hour++) {
       for (let minutes of ["00", "30"]) {
         const time = `${hour}:${minutes}`;
         const isActive = selectedTimeBtn === time; // Check if the button's time is selected

@@ -120,7 +120,7 @@ const FemaleDateTimeSelection = () => {
     const currentTime = new Date();
     const today = format(currentTime, "yyyy-MM-dd");
 
-    for (let hour = 7; hour < 24; hour++) {
+    for (let hour = 7; hour < 21; hour++) {
       for (let minutes of ["00", "30"]) {
         const time = `${hour}:${minutes}`;
         const isActive = selectedTimeBtn === time; // Check if the button's time is selected
