@@ -82,7 +82,7 @@ const ServiceSelection = () => {
           fontFamily: "outfit-b",
         }}
       >
-        Zgjedh berberin
+        Zgjedh Specialstin
       </Text>
       <DropDownPicker
         placeholder=""

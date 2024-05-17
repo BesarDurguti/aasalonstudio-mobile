@@ -78,7 +78,7 @@ const ChangePassword = () => {
         >
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Nderroni Fjalekalimin</Text>
+        <Text style={styles.headerText}>Ndryshoni Fjalëkalimin</Text>
       </View>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingContainer}
@@ -88,14 +88,14 @@ const ChangePassword = () => {
           contentContainerStyle={styles.contentContainer}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={[user.gender === 'male' ? styles.headerTitle : styles.headerTitleFemale]}>Nderroni Fjalekalimin</Text>
+          <Text style={[user.gender === 'male' ? styles.headerTitle : styles.headerTitleFemale]}>Ndryshoni Fjalëkalimin</Text>
           <View style={styles.view}>
             <Text style={[user.gender === 'male' ? styles.label : styles.labelFemale]}>Fjalekalimi i ri</Text>
             <TextInput
               style={[user.gender === 'male' ? styles.input : styles.inputFemale]}
               onChangeText={setNewPassword}
               secureTextEntry={true}
-              placeholder="Shkruani fjalekalimin e ri"
+              placeholder="Shkruani fjalëkalimin e ri"
               placeholderTextColor={user.gender === 'male' ? Colors.WHITE : Colors.GOLD}
             />
             <Text style={[user.gender === 'male' ? styles.label : styles.labelFemale]}>Rishkruani fjalekalimin e ri</Text>
@@ -103,12 +103,12 @@ const ChangePassword = () => {
               style={[user.gender === 'male' ? styles.input : styles.inputFemale]}
               onChangeText={setConfirmPassword}
               secureTextEntry={true}
-              placeholder="Rishkruani fjalekalimin e ri"
+              placeholder="Rishkruani fjalëkalimin e ri"
               placeholderTextColor={user.gender === 'male' ? Colors.WHITE : Colors.GOLD}
             />
             {error ? <Text style={styles.error}>{error}</Text> : null}
             <TouchableOpacity style={[user.gender == 'male' ? styles.button : styles.buttonFemale]} onPress={changePassword}>
-              <Text style={[user.gender === 'male' ? styles.buttonText : styles.buttonTextFemale]}>Nderroni Fjalekalimin</Text>
+              <Text style={[user.gender === 'male' ? styles.buttonText : styles.buttonTextFemale]}>Ndryshoni Fjalëkalimin</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

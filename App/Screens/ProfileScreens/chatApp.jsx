@@ -75,8 +75,8 @@ const ChatScreen = () => {
   useEffect(() => {
     if (incomingMessages && Object.keys(incomingMessages).length > 0) {
       if (incomingMessages.userId === selectedUserId) {
-        console.log('Jemi ne incoming messages .....');
-        console.log(messages, incomingMessages);
+        // console.log('Jemi ne incoming messages .....');
+        // console.log(messages, incomingMessages);
         if (messages.length > 0) {
           const lastMessageIndex = messages.length - 1;
 
@@ -107,7 +107,7 @@ const ChatScreen = () => {
       });
       if (response.data.messages) {
         setMessages(response.data.messages);
-        console.log(response.data.messages);
+        // console.log(response.data.messages);
       }
     } catch (err) {
       console.log(err.response.data);
@@ -124,8 +124,8 @@ const ChatScreen = () => {
       lastMessageIndex = messages.length - 1;
     }
 
-    console.log('Jemi ne handleSend Message..........');
-    console.log('Last message index: ' +lastMessageIndex);
+    // console.log('Jemi ne handleSend Message..........');
+    // console.log('Last message index: ' +lastMessageIndex);
 
     const newMessage = {
       id: messages[lastMessageIndex] ? messages[lastMessageIndex].id + 1 : 0,

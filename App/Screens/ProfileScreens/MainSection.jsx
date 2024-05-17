@@ -12,7 +12,7 @@ export default function MainSection() {
 
   return (
     <View style={[user.gender === 'male' ? styles.mainSection : styles.mainSectionFemale]}>
-      <Text style={[user.gender === 'male' ? styles.text : styles.textFemale]}>Profile</Text>
+      <Text style={[user.gender === 'male' ? styles.text : styles.textFemale]}>Profili</Text>
       <View style={[user.gender === 'male' ? styles.borderBottom : styles.borderBottomFemale]}></View>
       <View style={styles.profili}>
         <View style={[user.gender === 'male' ? styles.userDiv : styles.userDivFemale]}>

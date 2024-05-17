@@ -26,61 +26,8 @@ export default function FemaleWorkers() {
           fontFamily: "outfit-m",
         }}
       >
-        Zgjedhni një Specialist
+        Zgjidhni një Specialiste
       </Text>
-      {/* <FlatList
-        data={barbers}
-        horizontal={false}
-        style={{ marginTop: 20 }}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity onPress={() => handleBarberClick(item.id)}>
-          <View
-            style={{
-              marginBottom: 20,
-              shadowColor: Colors.GOLD,
-              shadowOffset: { width: 1, height: 1 },
-              shadowOpacity: 1,
-              shadowRadius: 2,
-              elevation: 2,
-            }}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: Colors.WHITE,
-                padding: 10,
-                borderRadius: 6,
-              }}
-            >
-              <Image
-                source={{ uri: API_URL + item.avatar }}
-                style={{
-                  height: 120,
-                  width: 120,
-                  borderRadius: 6,
-                  marginRight: 20,
-                }}
-              />
-              <View>
-                <Text
-                  style={{
-                    color: Colors.GOLD,
-                    fontFamily: "outfit-r",
-                    fontSize: 20,
-                  }}
-                >
-                  {item.name}
-                {"\n"}({item.phone})
-                </Text>
-        
-              </View>
-            </View>
-          </View>
-          </TouchableOpacity>
-        )}
-      /> */}
             <ScrollView style={{ marginTop: 20 }}>
         {barbers.map((item, index) => (
           <TouchableOpacity key={item.id} onPress={() => handleBarberClick(item.id)}>

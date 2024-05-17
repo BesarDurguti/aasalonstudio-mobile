@@ -24,7 +24,7 @@ export default function ProductScreen() {
 
   return (
     <View style={[styles.container]}>
-      <Text style={styles.title}>Produktet</Text>
+      <Text style={[styles.title,{marginTop:20,marginBottom:20}]}>Produktet</Text>
       <FlatList
         contentContainerStyle={styles.flatListContent}
         data={products}

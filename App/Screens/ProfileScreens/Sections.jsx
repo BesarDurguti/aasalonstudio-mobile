@@ -56,7 +56,7 @@ export default function Sections() {
         onPressOut={() => handlePressOut(0)}
         onPress={() => handleNavigate("ChangePassword")}
       >
-        <Text style={[user.gender === 'male' ? style.settingsText : style.settingsTextFemale]}>Nderroni passwordin</Text>
+        <Text style={[user.gender === 'male' ? style.settingsText : style.settingsTextFemale]}>Ndryshoni Fjalëkalimin</Text>
         <MaterialIcons
           style={style.iconStyle}
           name="arrow-forward-ios"
