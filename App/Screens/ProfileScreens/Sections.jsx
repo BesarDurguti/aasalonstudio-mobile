@@ -5,7 +5,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import axiosClient from "../../axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserContext } from "../../store/UserContext";
-import RNPusherPushNotifications from 'react-native-pusher-push-notifications';
 import { useNavigation } from "@react-navigation/native";
 
 export default function Sections() {
@@ -28,14 +27,6 @@ export default function Sections() {
     try {
       const response = await axiosClient.post("/api/logout");
 
-      RNPusherPushNotifications.clearAllState((error) => {
-        if (error) {
-          console.error('Error clearing Pusher state:', error);
-        } else {
-          console.log('Successfully cleared Pusher state');
-        }
-      });
-
       await AsyncStorage.removeItem("token");
       await AsyncStorage.removeItem("user");
       setIsLogged(false);
@@ -56,12 +47,20 @@ export default function Sections() {
         onPressOut={() => handlePressOut(0)}
         onPress={() => handleNavigate("ChangePassword")}
       >
-        <Text style={[user.gender === 'male' ? style.settingsText : style.settingsTextFemale]}>Ndryshoni Fjalëkalimin</Text>
+        <Text
+          style={[
+            user.gender === "male"
+              ? style.settingsText
+              : style.settingsTextFemale,
+          ]}
+        >
+          Ndryshoni Fjalëkalimin
+        </Text>
         <MaterialIcons
           style={style.iconStyle}
           name="arrow-forward-ios"
           size={20}
-          color={user.gender === 'male' ? Colors.WHITE : Colors.GOLD}
+          color={user.gender === "male" ? Colors.WHITE : Colors.GOLD}
         />
       </TouchableOpacity>
 
@@ -72,13 +71,21 @@ export default function Sections() {
           onPressOut={() => handlePressOut(2)}
           onPress={() => handleNavigate("AppointmentsAdmin")}
         >
-        <Text style={[user.gender === 'male' ? style.settingsText : style.settingsTextFemale]}>Terminet e berberit</Text>
-        <MaterialIcons
-          style={style.iconStyle}
-          name="arrow-forward-ios"
-          size={20}
-          color={user.gender === 'male' ? Colors.WHITE : Colors.GOLD}
-        />
+          <Text
+            style={[
+              user.gender === "male"
+                ? style.settingsText
+                : style.settingsTextFemale,
+            ]}
+          >
+            Terminet e berberit
+          </Text>
+          <MaterialIcons
+            style={style.iconStyle}
+            name="arrow-forward-ios"
+            size={20}
+            color={user.gender === "male" ? Colors.WHITE : Colors.GOLD}
+          />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -87,12 +94,20 @@ export default function Sections() {
           onPressOut={() => handlePressOut(1)}
           onPress={() => handleNavigate("AppointmentsUser")}
         >
-          <Text style={[user.gender === 'male' ? style.settingsText : style.settingsTextFemale]}>Terminet</Text>
+          <Text
+            style={[
+              user.gender === "male"
+                ? style.settingsText
+                : style.settingsTextFemale,
+            ]}
+          >
+            Terminet
+          </Text>
           <MaterialIcons
             style={style.iconStyle}
             name="arrow-forward-ios"
             size={20}
-            color={user.gender === 'male' ? Colors.WHITE : Colors.GOLD}
+            color={user.gender === "male" ? Colors.WHITE : Colors.GOLD}
           />
         </TouchableOpacity>
       )}
@@ -103,12 +118,20 @@ export default function Sections() {
         onPressOut={() => handlePressOut(3)}
         onPress={() => handleNavigate("ChatUsers")}
       >
-        <Text style={[user.gender === 'male' ? style.settingsText : style.settingsTextFemale]}>Bisedat</Text>
+        <Text
+          style={[
+            user.gender === "male"
+              ? style.settingsText
+              : style.settingsTextFemale,
+          ]}
+        >
+          Bisedat
+        </Text>
         <MaterialIcons
           style={style.iconStyle}
           name="arrow-forward-ios"
           size={20}
-          color={user.gender === 'male' ? Colors.WHITE : Colors.GOLD}
+          color={user.gender === "male" ? Colors.WHITE : Colors.GOLD}
         />
       </TouchableOpacity>
 
@@ -119,7 +142,7 @@ export default function Sections() {
             textAlign: "center",
             marginTop: 20,
             fontSize: 20,
-            color: user.gender === 'male' ? Colors.WHITE : Colors.GOLD,
+            color: user.gender === "male" ? Colors.WHITE : Colors.GOLD,
             fontFamily: "outfit-b",
           }}
         >

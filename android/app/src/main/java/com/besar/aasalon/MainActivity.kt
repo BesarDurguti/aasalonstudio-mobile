@@ -10,10 +10,6 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 import expo.modules.ReactActivityDelegateWrapper
 
-import com.b8ne.RNPusherPushNotifications.NotificationsMessagingService;
-
-import android.content.Intent
-
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     // Set the theme to AppTheme BEFORE onCreate to support
@@ -62,18 +58,4 @@ class MainActivity : ReactActivity() {
       // because it's doing more than [Activity.moveTaskToBack] in fact.
       super.invokeDefaultOnBackPressed()
   }
-      override fun onStart() {
-      super.onStart()
-
-      val reactInstanceManager = getReactNativeHost().reactInstanceManager
-      NotificationsMessagingService.read(reactInstanceManager, this)
-     }
-
-    override fun onNewIntent(intent: Intent) {
-      super.onNewIntent(intent)
-      setIntent(intent)
-      val reactInstanceManager = getReactNativeHost().reactInstanceManager
-      NotificationsMessagingService.read(reactInstanceManager, this)
-    }
-
 }

@@ -1,10 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { connect, pusher } from "../pusher";
-import { connectPusherBeam } from "../pusherBeam";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { initPushNotification } from "../PusherNotification";
-import { EventEmitter } from "react-native";
 
 const ChatAppointmentContext = createContext();
 
@@ -24,38 +21,6 @@ const ChatAppointmentProvider = ({ children }) => {
   useEffect(() => {
     global.isOnChatAppScreen = isOnChatApp;
   }, [isOnChatApp]);
-  //Subscribing to Pusher Beam , Pusher Notification , Pusher JS
-  const subscribeToPusherBeam = async () => {
-    if (user) {
-      //getting the stored subscription data
-      const storedSubscriptionData = await AsyncStorage.getItem(
-        "subscriptionData"
-      );
-
-      //parsing the stored subscription data
-      const parsedSubscriptionData = storedSubscriptionData
-        ? JSON.parse(storedSubscriptionData)
-        : null;
-
-      try {
-        //Connecting to pusher beam and subscribing to channel
-        connectPusherBeam(
-          `barber_${user.id}`,
-          `chat_${user.id}`,
-          user.id,
-          parsedSubscriptionData
-        );
-
-        await AsyncStorage.setItem(
-          "subscriptionData",
-          JSON.stringify({ isSubscribed: true, userId: user.id })
-        );
-        initPushNotification();
-      } catch (error) {
-        console.error("Failed to connect to Pusher Beam or subscribe:", error);
-      }
-    }
-  };
 
   //Handling data for when a customer makes an appointment
   const handleEvent = (event) => {
@@ -105,7 +70,6 @@ const ChatAppointmentProvider = ({ children }) => {
 
   useEffect(() => {
     if (isLogged) {
-      subscribeToPusherBeam();
       connectToPusherBookingPlaced();
       connectToPusherChat();
     }
