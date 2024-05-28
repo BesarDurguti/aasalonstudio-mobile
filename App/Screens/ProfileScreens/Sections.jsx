@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Sections() {
   const navigation = useNavigation();
   const [isPressedButton, setPressedButton] = useState(null);
-  const { setIsLogged, user } = useContext(UserContext);
+  const { setIsLogged, user, deleteExpoToken } = useContext(UserContext);
   const handlePressIn = (index) => {
     setPressedButton(index);
   };
@@ -25,6 +25,7 @@ export default function Sections() {
 
   const logout = async () => {
     try {
+      deleteExpoToken();
       const response = await axiosClient.post("/api/logout");
 
       await AsyncStorage.removeItem("token");
