@@ -79,7 +79,7 @@ export default function Services() {
                 onPress={() => handleServiceBook(item.id)}
               >
                 <Text style={{ color: "white", fontFamily: "outfit-md" }}>
-                  Book
+                  Cakto termin
                 </Text>
               </TouchableOpacity>
             </View>

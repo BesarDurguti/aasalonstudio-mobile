@@ -27,11 +27,11 @@ export default function FemaleMainSection() {
           position: "relative", // Added this line
         }}
       />
-      <Text style={style.text}>GET CUTE TODAY</Text>
+      <Text style={style.text}>Behu e bukur sot</Text>
       <TouchableOpacity style={style.book} onPress={navigateToBooking}>
         <Text style={{ color: Colors.GOLD, fontFamily: "outfit-md" }}>
           {/* <Text style={{ color: Colors.GOLD, fontFamily: "outfit-md" }}> */}
-          Book
+          Cakto termin
         </Text>
       </TouchableOpacity>
     </View>

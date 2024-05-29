@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Image, StyleSheet } from "react-native";
+import { View, Text, FlatList, Image, StyleSheet, Dimensions } from "react-native";
 import axiosClient from "../../axios";
 import Colors from "../../Utils/Colors";
+
+const { width } = Dimensions.get('window');
 
 export default function ProductScreen() {
   const [numColumns, setNumColumns] = useState(2);
@@ -15,10 +17,20 @@ export default function ProductScreen() {
   const fetchProducts = async () => {
     try {
       const response = await axiosClient.get("/api/getProducts");
-
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+    }
+  };
+
+  const calculateFontSize = (text) => {
+    // Adjust font size dynamically based on text length
+    if (text.length < 20) {
+      return 12;
+    } else if (text.length < 40) {
+      return 10;
+    } else {
+      return 8;
     }
   };
 
@@ -36,15 +48,12 @@ export default function ProductScreen() {
               style={styles.image}
             />
             <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width:'100%'
-              }}
+              style={styles.textContainer}
             >
-              <Text style={styles.text}>{item.name}</Text>
-              <Text style={[styles.text, styles.textBold]}>{item.price}€</Text>
+              <View style={styles.textWrapper}>
+                <Text numberOfLines={3} ellipsizeMode="tail" style={[styles.text, {fontSize: calculateFontSize(item.name)}]}>{item.name}</Text>
+              </View>
+              <Text style={[styles.text, styles.textBold, {fontSize: 14}]}>{item.price}€</Text>
             </View>
           </View>
         )}
@@ -59,13 +68,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.BLACK, // Set background color to black
+    backgroundColor: Colors.BLACK,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: Colors.WHITE,
-    textAlign: "left", // Align text to the left
+    textAlign: "left",
   },
   itemContainer: {
     backgroundColor: Colors.WHITE,
@@ -79,8 +88,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    margin: 10, // Add margin for spacing between products
-    width: "44%",
+    margin: 10,
+    width: (width / 2) - 30,
   },
   image: {
     height: 200,
@@ -88,15 +97,20 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
   },
+  textContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  textWrapper: {
+    flex: 1,
+  },
   text: {
-    fontSize: 12,
-    padding:10
+    flexShrink: 1,
+    lineHeight: 18, // Adjust line height for better readability
   },
   textBold: {
     fontWeight: "bold",
-    fontSize: 14
-  },
-  marginTopP: {
-    marginTop: 20,
   },
 });
