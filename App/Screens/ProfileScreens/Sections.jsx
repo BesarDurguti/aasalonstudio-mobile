@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Sections() {
   const navigation = useNavigation();
   const [isPressedButton, setPressedButton] = useState(null);
-  const { setIsLogged, user, deleteExpoToken } = useContext(UserContext);
+  const { setIsLogged, user, logoutForProfile } = useContext(UserContext);
   const handlePressIn = (index) => {
     setPressedButton(index);
   };
@@ -25,12 +25,14 @@ export default function Sections() {
 
   const logout = async () => {
     try {
-      deleteExpoToken();
-      const response = await axiosClient.post("/api/logout");
 
-      await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("user");
-      setIsLogged(false);
+      await logoutForProfile();
+      // deleteExpoToken();
+      // const response = await axiosClient.post("/api/logout");
+
+      // await AsyncStorage.removeItem("token");
+      // await AsyncStorage.removeItem("user");
+      // setIsLogged(false);
     } catch (err) {
       console.log(err.response.error, err);
     }
@@ -79,7 +81,7 @@ export default function Sections() {
                 : style.settingsTextFemale,
             ]}
           >
-            Terminet e berberit
+            Terminet
           </Text>
           <MaterialIcons
             style={style.iconStyle}

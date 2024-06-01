@@ -62,7 +62,7 @@ const FemaleDateTimeSelection = () => {
               },
             };
           }, {});
-          console.log(disabledDates);
+          // console.log(disabledDates);
           setDisabledDates(disabledDates);
         } else {
           setDisabledDates({});

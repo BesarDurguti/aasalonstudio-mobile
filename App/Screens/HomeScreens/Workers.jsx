@@ -2,6 +2,7 @@ import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../../store/UserContext";
 import { useNavigation } from "@react-navigation/native";
+import Colors from "../../Utils/Colors";
 
 export default function Workers() {
   const { barbers, setSelectedBarber } = useContext(UserContext);
@@ -26,7 +27,16 @@ export default function Workers() {
       >
         Zgjidhni një Specialist
       </Text>
-      <FlatList
+      {barbers === null || barbers === undefined || barbers.length < 1 ? 
+      (
+            <Text 
+            style={{color:'white',textAlign:'center', marginTop:'5%',fontSize:20}}>
+              Nuk ka të dhëna!
+            </Text>
+        
+      ) :
+      (
+        <FlatList
         data={barbers}
         horizontal={true}
         style={{ marginTop: 20 }}
@@ -57,6 +67,9 @@ export default function Workers() {
           </TouchableOpacity>
         )}
       />
+      ) 
+    }
+      
     </View>
   );
 }

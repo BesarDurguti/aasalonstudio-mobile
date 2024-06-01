@@ -127,6 +127,8 @@ const FemaleAppointmentBookingScreen = () => {
             textAlign: "center",
             fontFamily: "outfit-md",
             fontSize: 16,
+            justifyContent:'center',
+            alignSelf:'center'
           }}
         >
          <ActivityIndicator size="small" color={Colors.WHITE} />

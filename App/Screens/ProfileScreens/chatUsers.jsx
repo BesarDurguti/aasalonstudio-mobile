@@ -114,36 +114,47 @@ const ChatUsers = () => {
         <Text style={styles.headerText}>Bisedat</Text>
       </View>
       <ScrollView style={styles.scrollView}>
-        {users.map((user) => (
-          <TouchableOpacity
-            key={user.id}
-            style={styles.userItem}
-            onPress={() => navigateToChat(user)}
-            // onPress={() =>
-            //   navigation.navigate("Chat", {
-            //     userId: user.id,
-            //     name: user.name,
-            //     username: user.username,
-            //   })
-            // }
-          >
-            <Text style={styles.userName}>
-              {user.name} {user.username}
-            </Text>
-            {user.total_unread > 0 && (
-              <Text
-                style={[
-                  styles.userName,
-                  {
-                    color: Colors.GOLD,
-                  },
-                ]}
+        {users === null || users === undefined || users.length < 1 ? 
+          ( 
+            <Text 
+            style={{color:'white',textAlign:'center', marginTop:'5%',fontSize:20}}>
+              Nuk ka të dhëna!
+          </Text>
+          ):
+          (
+            users.map((user) => (
+              <TouchableOpacity
+                key={user.id}
+                style={styles.userItem}
+                onPress={() => navigateToChat(user)}
+                // onPress={() =>
+                //   navigation.navigate("Chat", {
+                //     userId: user.id,
+                //     name: user.name,
+                //     username: user.username,
+                //   })
+                // }
               >
-                {user.total_unread}
-              </Text>
-            )}
-          </TouchableOpacity>
-        ))}
+                <Text style={styles.userName}>
+                  {user.name} {user.username}
+                </Text>
+                {user.total_unread > 0 && (
+                  <Text
+                    style={[
+                      styles.userName,
+                      {
+                        color: Colors.GOLD,
+                      },
+                    ]}
+                  >
+                    {user.total_unread}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            ))
+          )
+        }
+        
       </ScrollView>
     </View>
   );

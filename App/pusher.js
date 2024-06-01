@@ -37,15 +37,13 @@ const onError = (message, code, error) => {
 };
 
 const onSubscriptionSucceeded = (channelName, data) => {
-  console.log(
-    `onSubscriptionSucceeded: ${channelName} data: ${JSON.stringify(data)}`
-  );
+
   const channel = pusher.getChannel(channelName);
 
   if (!channel) {
     return;
   } else {
-    console.log(channel);
+    // console.log(channel);
   }
 };
 

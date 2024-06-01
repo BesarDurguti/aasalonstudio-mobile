@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
   },

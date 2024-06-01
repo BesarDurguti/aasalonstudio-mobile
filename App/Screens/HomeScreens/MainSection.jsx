@@ -27,13 +27,6 @@ export default function MainSection() {
           position: "relative", // Added this line
         }}
       />
-      {/* <Text style={style.text}>{siteInfos[0].bannerText}</Text> */}
-      {/* <TouchableOpacity style={style.book}> */}
-      {/* <Text style={{ color: Colors.WHITE, fontFamily: "outfit-md" }}> */}
-      {/* <Text style={{ color: Colors.GOLD, fontFamily: "outfit-md" }}> */}
-      {/* Book
-        </Text> */}
-      {/* </TouchableOpacity> */}
     </View>
   );
 }

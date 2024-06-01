@@ -242,7 +242,7 @@ const DateTimeSelection = () => {
                     onPress={() => handleCancel()}
                     style={style.cancelButton}
                   >
-                    <Text style={style.buttonText}>Cancel</Text>
+                    <Text style={style.buttonText}>Anulo</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={style.buttonWrapper}>
@@ -250,7 +250,7 @@ const DateTimeSelection = () => {
                     onPress={() => handleConfirm()}
                     style={style.confirmButton}
                   >
-                    <Text style={style.buttonText}>Confirm</Text>
+                    <Text style={style.buttonText}>Konfirmo</Text>
                   </TouchableOpacity>
                 </View>
               </View>

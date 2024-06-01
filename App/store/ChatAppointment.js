@@ -69,16 +69,17 @@ const ChatAppointmentProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log('A ppo provojm me hyn');
     if (isLogged) {
-      console.log('A jemi mrenda aaaa');
       connectToPusherBookingPlaced();
       connectToPusherChat();
     }
 
     return () => {
-      console.log('A po provojm me dal');
-      disconnectToPusher();
+      // console.log('Trying to discconnect from pusher');
+      if (isLogged) {
+        // console.log('trying to disconnect');
+        disconnectToPusher();
+      }
     };
   }, [isLogged]);
 

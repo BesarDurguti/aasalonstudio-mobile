@@ -77,7 +77,7 @@ const AppointmentsUser = () => {
 
   const cancelAppointment = async (appointment) => {
     if (!appointment) {
-      setError("Invalid appointment.");
+      setError("Ka ndodhur një gabim!");
       return;
     }
 
@@ -89,7 +89,7 @@ const AppointmentsUser = () => {
       if (isActive) {
         if (currentDateTime > twoHoursBeforeAppointment) {
           setError(
-            "Nuk mund te anulohet termini ju kan mbetur 2 ore ose me pak deri ne termin."
+            "Nuk mund të anulohet 2 orë para terminit, ju lutemi na kontaktoni!"
           );
           return;
         }
@@ -98,11 +98,11 @@ const AppointmentsUser = () => {
           `/api/cancelAppointment/${appointment.id}`
         );
         if (response.data.success) {
-          setSuccess("Successfully canceled the appointment.");
+          setSuccess("Termini u anulua me sukses.");
           appointmentsUserFetch();
         }
       } else {
-        setError("Termini nuk eshte aktiv.");
+        setError("Termini nuk është aktiv.");
       }
     } catch (error) {
       // if (currentDateTime < twoHoursBeforeAppointment) {
@@ -183,7 +183,7 @@ const AppointmentsUser = () => {
             })
           ) : (
             <Text style={styles.noAppointmentText}>
-              Nuk keni termine aktive
+              Nuk keni termine
             </Text>
           )}
           {error !== "" && <Text style={styles.errorText}>{error}</Text>}
@@ -197,7 +197,7 @@ const AppointmentsUser = () => {
                 : styles.sectionTitleFemale,
             ]}
           >
-            Terminet e perfunduara
+            Terminet e përfunduara
           </Text>
           {inActiveAppointment.length > 0 ? (
             inActiveAppointment.map((appointment, index) => {
@@ -216,7 +216,7 @@ const AppointmentsUser = () => {
                 >
                   <View style={styles.cardContent}>
                     <Text style={[styles.inactiveCardText]}>
-                      {`Berberi: ${barber.name} - ${new Date(
+                      {`${barber.name} - ${new Date(
                         appointment.date
                       ).toLocaleDateString("en-GB")} - ${appointment.time}`}
                     </Text>
@@ -226,7 +226,7 @@ const AppointmentsUser = () => {
             })
           ) : (
             <Text style={styles.noAppointmentText}>
-              Nuk keni termine te perfunduara
+              Nuk keni termine të përfunduara
             </Text>
           )}
         </View>

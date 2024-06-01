@@ -54,9 +54,9 @@ const ResetPassword = () => {
       };
 
       const response = await axiosClient.post("/api/resetPassword", userData);
-      console.log("test: ", response.data);
+      // console.log("test: ", response.data);
       if (response.data.success) {
-        Alert.alert("Success", response.data.message);
+        Alert.alert("Sukses", 'Fjalëkalimi juaj është rivendosur.');
         navigateBackToLogin();
         setError("");
       }
@@ -158,6 +158,8 @@ const ResetPassword = () => {
                   textAlign: "center",
                   fontFamily: "outfit-md",
                   fontSize: 16,
+                  justifyContent:'center',
+                  alignSelf:'center'
                 }}
               >
                 <ActivityIndicator size="small" color={Colors.BLACK} />
