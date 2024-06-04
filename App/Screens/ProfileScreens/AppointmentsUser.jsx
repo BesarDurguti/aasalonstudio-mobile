@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
@@ -56,7 +57,7 @@ const AppointmentsUser = () => {
         err,
         err.response.data
       );
-      setError("Failed to fetch appointments.");
+      setError("Ka ndodhur nje problem me te dhena.");
     }
   };
 
@@ -125,6 +126,24 @@ const AppointmentsUser = () => {
     (appointment) => !isAppointmentActive(appointment).isActive
   );
 
+  const confirmCancelAppointment = (appointment) => {
+    Alert.alert(
+      "Konfirmimi",
+      "A jeni i sigurt që dëshironi të anuloni termin?",
+      [
+        {
+          text: "Jo",
+          style: "cancel",
+        },
+        {
+          text: "Po",
+          onPress: () => cancelAppointment(appointment),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <View
       style={[
@@ -164,11 +183,11 @@ const AppointmentsUser = () => {
                   style={[
                     user.gender === "male" ? styles.card : styles.cardFemale,
                   ]}
-                  onPress={() => cancelAppointment(appointment)}
+                  onPress={() => confirmCancelAppointment(appointment)}
                 >
                   <View style={styles.cardContent}>
                     <Text style={styles.cardText}>
-                      {`Berberi: ${barber.name} - ${new Date(
+                      {`${user.gender==="male" ? `Berberi` : `Stilistja`}: ${barber.name} - ${new Date(
                         appointment.date
                       ).toLocaleDateString("en-GB")} - ${appointment.time}`}
                     </Text>

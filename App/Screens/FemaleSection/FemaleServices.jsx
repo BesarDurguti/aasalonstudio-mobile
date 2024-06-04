@@ -34,6 +34,14 @@ export default function FemaleServices() {
       >
         Shërbimet
       </Text>
+      {services === null || services === undefined || services.length < 1 ? 
+        (
+          <Text 
+            style={{color:'black',textAlign:'center', marginTop:'5%',fontSize:20}}>
+              Nuk ka të dhëna!
+          </Text>
+
+        ) : (
       <FlatList
         data={services}
         horizontal={true}
@@ -102,6 +110,8 @@ export default function FemaleServices() {
           </View>
         )}
       />
+    ) 
+  }
     </View>
   );
 }

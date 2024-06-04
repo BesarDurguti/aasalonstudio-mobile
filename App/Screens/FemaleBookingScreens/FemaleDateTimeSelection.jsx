@@ -24,6 +24,7 @@ const FemaleDateTimeSelection = () => {
   const [selectedTimeBtn, setSelectedTimeBtn] = useState("");
   const [disabledDates, setDisabledDates] = useState({});
   const [bookedDates, setBookedDates] = useState([]);
+  const [dateTimeErr, setDateTimeErr] = useState("");
   const maxDate = format(addMonths(new Date(), 1), "yyyy-MM-dd");
   const minDate = format(new Date(), "yyyy-MM-dd");
 
@@ -67,6 +68,23 @@ const FemaleDateTimeSelection = () => {
         } else {
           setDisabledDates({});
         }
+        
+        // Create a new date object for 'today'
+        let currentDate = new Date();
+
+        // Format the current date
+        let formattedDate = format(currentDate, "yyyy-MM-dd");
+
+        // While the current date is in the disabled dates, increment the date by one day
+        while (
+          disabledDatesResponse.some((item) => item.date === formattedDate)
+        ) {
+          currentDate.setDate(currentDate.getDate() + 1);
+          formattedDate = format(currentDate, "yyyy-MM-dd");
+        }
+
+        // Set the date state to the next available date
+        setDate(formattedDate);
 
         setBookedDates(response.data.bookingDates);
       } catch (error) {
@@ -76,6 +94,19 @@ const FemaleDateTimeSelection = () => {
 
     fetchBookingDates();
   }, [selectedBarber]);
+  useEffect(() => {
+    if (disabledDates[date]) {
+      let currentDate = new Date(date);
+      let nextDate = new Date(currentDate);
+      nextDate.setDate(nextDate.getDate() + 1);
+
+      // If the next date is also disabled, set the date to the day after
+      if (disabledDates[format(nextDate, "yyyy-MM-dd")]) {
+        nextDate.setDate(nextDate.getDate() + 1);
+        setDate(format(nextDate, "yyyy-MM-dd"));
+      }
+    }
+  }, [disabledDates, date]);
 
   //Functions for toggle and work with date and time
   const toggleDatePicker = () => {
@@ -100,6 +131,7 @@ const FemaleDateTimeSelection = () => {
     setSelectedTimeBtn("");
     setSelectedDate(null);
     setShowModal(false); // Hide the modal
+    setDateTimeErr("");
   };
 
   const handleConfirm = () => {
@@ -109,8 +141,9 @@ const FemaleDateTimeSelection = () => {
       setSelectedDate(formattedDate);
       setShowModal(false);
       setText("Dita: " + formattedDate + ", Ora: " + timeAppointment);
+      setDateTimeErr("");
     } else {
-      console.log("Please choose time and date");
+      setDateTimeErr("Ju lutem zgjidhni datën dhe kohën!");
     }
   };
 
@@ -120,7 +153,7 @@ const FemaleDateTimeSelection = () => {
     const currentTime = new Date();
     const today = format(currentTime, "yyyy-MM-dd");
 
-    for (let hour = 7; hour < 21; hour++) {
+    for (let hour = 9; hour < 21; hour++) {
       for (let minutes of ["00", "30"]) {
         const time = `${hour}:${minutes}`;
         const isActive = selectedTimeBtn === time; // Check if the button's time is selected
@@ -196,6 +229,13 @@ const FemaleDateTimeSelection = () => {
               />
               <View style={style.timeSlotsContainer}>
                 {renderTimeButtons()}
+                {dateTimeErr ? (
+                  <Text style={{ color: "red", fontWeight: "bold" }}>
+                    {dateTimeErr}
+                  </Text>
+                ) : (
+                  ""
+                )}
               </View>
               <View style={style.buttonContainer}>
                 <View style={style.buttonWrapper}>
@@ -203,7 +243,7 @@ const FemaleDateTimeSelection = () => {
                     onPress={() => handleCancel()}
                     style={style.cancelButton}
                   >
-                    <Text style={style.buttonText}>Cancel</Text>
+                    <Text style={style.buttonText}>Anulo</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={style.buttonWrapper}>
@@ -211,7 +251,7 @@ const FemaleDateTimeSelection = () => {
                     onPress={() => handleConfirm()}
                     style={style.confirmButton}
                   >
-                    <Text style={style.buttonText}>Confirm</Text>
+                    <Text style={style.buttonText}>Konfirmo</Text>
                   </TouchableOpacity>
                 </View>
               </View>

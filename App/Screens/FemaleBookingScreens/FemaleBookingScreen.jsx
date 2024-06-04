@@ -13,6 +13,7 @@ import Colors from "../../Utils/Colors";
 import { UserContext } from "../../store/UserContext";
 import axiosClient from "../../axios";
 import { useNavigation } from "@react-navigation/native";
+import Loader from "../Loader/Loader";
 
 const FemaleAppointmentBookingScreen = () => {
   const [error, setError] = useState("");
@@ -91,6 +92,9 @@ const FemaleAppointmentBookingScreen = () => {
       setError("Ju lutemi mbushini fushat!");
     }
   };
+  if(!selectedBarber || selectedBarber == null || selectedBarber == undefined){
+    return <Loader />;
+  }
 
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: Colors.WHITE }}>
