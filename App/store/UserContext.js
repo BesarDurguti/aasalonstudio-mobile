@@ -34,10 +34,9 @@ const UserProvider = ({ children }) => {
       setUser(userJson);
       setToken(storedToken);
       setIsLogged(true);
-      setLoading(false);
     }else{
-      setLoading(false);
       setIsLogged(false);
+      setLoading(false);
     }
 
   }
@@ -62,7 +61,7 @@ const UserProvider = ({ children }) => {
   };
 
   const getServices = async () => {
-    console.log('a JEMI KTU');
+    // console.log('a JEMI KTU');
     if (user && token) {
       try {
         const responseServices = await axiosClient.get(`/api/getServices?gender=${user.gender}`);
@@ -76,7 +75,7 @@ const UserProvider = ({ children }) => {
   }
 
   const getSiteInfos = async () => {
-      console.log('A jemi ktu');
+      // console.log('A jemi ktu');
     if (user && token) {
       try {
         const responseSiteInfos = await axiosClient.get(`/api/getSiteInfos`);
@@ -93,6 +92,8 @@ const UserProvider = ({ children }) => {
     await getBarbers();
     await getServices();
     await getSiteInfos();
+
+    setLoading(false);
   }
 
   useEffect(() =>{
@@ -103,56 +104,8 @@ const UserProvider = ({ children }) => {
     }
   },[isLogged])
 
-  // const fetchData = async () => {
-  //   console.log("A jemi ne try tek fetch data");
-  //   setLoading(true); // Show loader before getting the data
-  //   try {
-  //     console.log("A jemi ne try tek fetch data");
 
-  //     const storedToken = await AsyncStorage.getItem("token");
-  //     const storedUser = await AsyncStorage.getItem("user");
 
-  //     if (storedToken && storedUser) {
-  //       const userJson = JSON.parse(storedUser);
-  //       setUser(userJson);
-  //       setToken(storedToken);
-
-  //       const [responseBarbers, responseServices, responseSiteInfos] =
-  //         await Promise.all([
-  //           axiosClient.get(`/api/getBarbers?gender=${userJson.gender}`),
-  //           axiosClient.get(`/api/getServices?gender=${userJson.gender}`),
-  //           axiosClient.get(`/api/getSiteInfos`),
-  //         ]);
-
-  //       setBarbers(responseBarbers.data.barbers);
-  //       setSelectedBarber(responseBarbers.data.barbers[0]);
-  //       setServices(responseServices.data.services);
-  //       setSiteInfos(responseSiteInfos.data.infos);
-
-  //       setIsLogged(true);
-  //     } else {
-  //       console.log("A jemi qetu diku");
-  //       setIsLogged(false);
-  //     }
-  //     setLoading(false); // Set loading to false after data fetching
-  //   } catch (err) {
-  //     console.log("A jemi qetu diku");
-  //     console.log(err, err.response, "tests");
-  //     setLoading(false);
-  //   } finally {
-  //     console.log("A jemi qetu diku");
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   //TODO:FIX THE LOGIC OF WHEN TO SEND REQUESTS
-  //   fetchData();
-  // }, [isLogged]);
-
-  if (loading) {
-    return <Loader />;
-  }
 
   const updateUserLoggedInStatus = (status, user, token) => {
     if (status === true) {
@@ -170,6 +123,8 @@ const UserProvider = ({ children }) => {
       user_id: userId,
     };
 
+    // console.log('Checking if we have expo token:',storeExpoTokenData);
+
     axiosClient
       .post(`/api/store-token`, storeExpoTokenData)
       .then((response) => {})
@@ -178,19 +133,33 @@ const UserProvider = ({ children }) => {
       });
   };
 
-  const deleteExpoToken = () => {
+  const logoutForProfile = async () => {
+
+    await deleteExpoToken();
+    await axiosClient.post("/api/logout");
+
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("user");
+    setIsLogged(false);
+  }
+
+  const deleteExpoToken = async () => {
     let storeExpoTokenData = {
       expo_token: expoPushToken,
       user_id: user.id,
     };
 
-    axiosClient
+    await axiosClient
       .delete(`/api/delete-token`, { data: storeExpoTokenData })
       .then((response) => {})
       .catch((err) => {
         console.log("error deleting the token", err);
       });
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <UserContext.Provider
@@ -218,6 +187,7 @@ const UserProvider = ({ children }) => {
         setValue,
         loading, // Pass loading state to context if needed
         deleteExpoToken,
+        logoutForProfile,
       }}
     >
       {children}

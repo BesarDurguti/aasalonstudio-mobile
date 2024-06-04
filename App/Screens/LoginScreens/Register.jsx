@@ -73,7 +73,7 @@ const Register = () => {
       };
       // Make a POST request to the registration endpoint
       const response = await axiosClient.post("/api/register", userData);
-      console.log(response.data);
+      // console.log(response.data);
       // console.log(response);
       if (response.data.success) {
         navigation.navigate("VerifyCode", { phoneNumber: phone });
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 300,
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingHorizontal: 5,
     marginBottom: 10,
     borderWidth: 3,
@@ -268,6 +268,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: Colors.GOLD,
     borderRadius: 15,
+    justifyContent:'center',
+    alignSelf:'center'
   },
   buttonText: {
     color: Colors.BLACK,

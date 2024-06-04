@@ -50,12 +50,12 @@ const ChangePassword = () => {
       const response = await axiosClient.post("/api/changePassword", userData);
     //   console.log(response);
       if (response.data.success) {
-        console.log("Successfully changed the password", response.data);
+        // console.log("Successfully changed the password", response.data);
         navigateBack();
         setError('');
       } else {
         // Handle login failure
-        console.log("Sending code failed:", response.data);
+        // console.log("Sending code failed:", response.data);
         setError('Sending code failed!');
       }
     } catch (err) {

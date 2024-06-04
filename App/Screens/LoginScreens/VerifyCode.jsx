@@ -46,7 +46,7 @@ const VerifyCode = () => {
       };
 
       const response = await axiosClient.post("/api/verify", userData);
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data.success) {
         navigation.navigate("Login");
       } else {
@@ -143,6 +143,8 @@ const VerifyCode = () => {
                 textAlign: "center",
                 fontFamily: "outfit-md",
                 fontSize: 16,
+                justifyContent:'center',
+                alignSelf:'center'
               }}
             >
               <ActivityIndicator size="small" color={Colors.BLACK} />

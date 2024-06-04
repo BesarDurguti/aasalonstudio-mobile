@@ -1,4 +1,4 @@
-rootProject.name = 'barber-app'
+rootProject.name = 'A&A Salon'
 
 dependencyResolutionManagement {
   versionCatalogs {

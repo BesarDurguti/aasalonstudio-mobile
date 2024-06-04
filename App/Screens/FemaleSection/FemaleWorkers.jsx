@@ -28,6 +28,15 @@ export default function FemaleWorkers() {
       >
         Zgjidhni një Specialiste
       </Text>
+      {barbers === null || barbers === undefined || barbers.length < 1 ? 
+      (
+            <Text 
+            style={{color:'black',textAlign:'center', marginTop:'5%',fontSize:20}}>
+              Nuk ka të dhëna!
+            </Text>
+        
+      ) :
+      (
             <ScrollView style={{ marginTop: 20 }}>
         {barbers.map((item, index) => (
           <TouchableOpacity key={item.id} onPress={() => handleBarberClick(item.id)}>
@@ -76,6 +85,8 @@ export default function FemaleWorkers() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+         ) 
+        }
     </View>
   );
 }

@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
@@ -46,11 +47,11 @@ const AppointmentsAdmin = () => {
         const user = response.data.map(appointment => appointment.user);
         setAppointments(response.data);
         setUsersAll(user);
-        console.log("Successfully fetched data", response.data);
+        // console.log("Successfully fetched data", response.data);
         setError('');
       } else {
         // Handle login failure
-        console.log("No appointments found:", response.data);
+        // console.log("No appointments found:", response.data);
         // setError('No appointments found.');
       }
     } catch (err) {
@@ -77,7 +78,53 @@ const AppointmentsAdmin = () => {
         twoHoursBeforeAppointment
       };
   };
+  
 
+  const cancelAppointmentAdmin = async (appointment) =>{
+    // console.log(appointment);
+    if(!appointment){
+      setError("Ka ndodhur nje gabim!");
+      return;
+    }
+    const { isActive } =
+    isAppointmentActive(appointment);
+    try {
+      if(isActive){
+        const response = await axiosClient.post(`/api/cancelAppointmentAdmin/${appointment.id}`);
+        if(response.data.success){
+          setSuccess("Termini u anulua me sukses.");
+          appointmentsAdminFetch();
+        }
+      }else{
+        setError("Termini nuk është aktiv.")
+      }
+      } catch (error) {
+      console.error(
+        "Failed to cancel appointment:",
+        error.response,
+        error,
+        error.response.data
+      );
+    }
+  }
+
+const confirmCancelAppointment = (appointment) => {
+    Alert.alert(
+      "Konfirmimi",
+      "A jeni i sigurt që dëshironi të anuloni termin?",
+      [
+        {
+          text: "Jo",
+          style: "cancel",
+        },
+        {
+          text: "Po",
+          onPress: () => cancelAppointmentAdmin(appointment),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
  
   const activeAppointments = appointments.filter(appointment => isAppointmentActive(appointment).isActive);
   const inActiveAppointment = appointments.filter(appointment => !isAppointmentActive(appointment).isActive);
@@ -92,28 +139,34 @@ const AppointmentsAdmin = () => {
       </View>
       <ScrollView contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.section}>
-          <Text style={[user.gender === 'male' ? styles.sectionTitle : styles.sectionTitleFemale]}>Terminet e ardheshme te Berberit</Text>
+          <Text style={[user.gender === 'male' ? styles.sectionTitle : styles.sectionTitleFemale]}>Terminet e pa përfunduara</Text>
           {activeAppointments.length > 0 ? (
             activeAppointments.map((appointment, index) => {
               const users = usersAll.find(users => users.id === appointment.customer_id) || { name: 'Unknown User' };
               return (
-                <View key={index} style={[user.gender === 'male' ? styles.card : styles.cardFemale]}>
+                <TouchableOpacity key={index} onPress={() => confirmCancelAppointment(appointment)} style={[user.gender === 'male' ? styles.card : styles.cardFemale]}>
                   <View style={styles.cardContent}>
                     <Text style={styles.cardText}>
-                      {`Customer: ${users.name} - ${new Date(appointment.date).toLocaleDateString('en-GB')} - ${appointment.time}`}
+                      {`${user.gender === "male" ? `Klienti` : `Klientja`}: ${users.name} - ${new Date(appointment.date).toLocaleDateString('en-GB')} - ${appointment.time}`}
                     </Text>
-                  </View>
+                   
+                    <Ionicons
+                      name="close-circle-outline"
+                      size={30}
+                      color="red"
+                    />
                 </View>
+                  </TouchableOpacity>
               );
             })
           ) : (
-            <Text style={styles.noAppointmentText}>Nuk keni termine aktive</Text>
+            <Text style={styles.noAppointmentText}>Nuk keni termine </Text>
           )}
           {error !== '' && <Text style={styles.errorText}>{error}</Text>}
           {success !== '' && <Text style={styles.success}>{success}</Text>}
         </View>
         <View style={styles.section}>
-          <Text style={[user.gender === 'male' ? styles.sectionTitle : styles.sectionTitleFemale]}>Terminet e perfunduara te Berberit</Text>
+          <Text style={[user.gender === 'male' ? styles.sectionTitle : styles.sectionTitleFemale]}>Terminet e përfunduara</Text>
           {inActiveAppointment.length > 0 ? (
             inActiveAppointment.map((appointment, index) => {
               const users = usersAll.find(users => users.id === appointment.customer_id) || { name: 'Unknown User' };
@@ -121,14 +174,14 @@ const AppointmentsAdmin = () => {
                 <View key={index} style={[user.gender === 'male' ? styles.card : styles.cardFemale , user.gender === 'male' ? styles.inactiveCard : styles.inactiveCardFemale]}>
                   <View style={styles.cardContent}>
                     <Text style={[styles.inactiveCardText]}>
-                      {`Customer: ${users.name} - ${new Date(appointment.date).toLocaleDateString('en-GB')} - ${appointment.time}`}
+                      {`${users.name} ${users.username} - ${new Date(appointment.date).toLocaleDateString('en-GB')} - ${appointment.time}`}
                     </Text>
                   </View>
                 </View>
               );
             })
           ) : (
-            <Text style={styles.noAppointmentText}>Nuk keni termine te perfunduara</Text>
+            <Text style={styles.noAppointmentText}>Nuk keni termine te përfunduara</Text>
           )}
         </View>
       </ScrollView>

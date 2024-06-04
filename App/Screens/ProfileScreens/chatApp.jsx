@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   ScrollView,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
@@ -182,6 +184,13 @@ const ChatScreen = () => {
   }, []);
 
   return (
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    keyboardVerticalOffset={60}
+    >
+
+    
     <SafeAreaView style={styles.container}>
       {/* Header */}
 
@@ -227,6 +236,8 @@ const ChatScreen = () => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+
+    </KeyboardAvoidingView>
   );
 };
 

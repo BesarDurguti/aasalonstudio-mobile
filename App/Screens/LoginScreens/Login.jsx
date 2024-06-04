@@ -29,12 +29,12 @@ const Login = () => {
 
   // Function to navigate to the Register screen
   const navigateToRegister = () => {
-    setPhone("");
+    console.log(password, phone, 'the phone and password');
+
     navigation.navigate("Register");
   };
   //Function to navigate to verify account screen
   const navigateToSendCode = () => {
-    setPhone("");
     navigation.navigate("SendCode");
   };
   //Function to navigate to Home Screen
@@ -58,7 +58,7 @@ const Login = () => {
       setIsSendingRequest(true);
 
       const response = await axiosClient.post("/api/login", userData);
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data.success) {
         const token = response.data.token;
         const user = response.data.user;
@@ -191,6 +191,8 @@ const Login = () => {
                   textAlign: "center",
                   fontFamily: "outfit-md",
                   fontSize: 16,
+                  justifyContent:'center',
+                  alignSelf:'center'
                 }}
               >
                 <ActivityIndicator size="small" color={Colors.BLACK} />

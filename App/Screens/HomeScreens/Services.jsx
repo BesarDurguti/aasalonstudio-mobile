@@ -30,7 +30,16 @@ export default function Services() {
       >
         Shërbimet
       </Text>
-      <FlatList
+
+        {services === null || services === undefined || services.length < 1 ? 
+        (
+          <Text 
+            style={{color:'white',textAlign:'center', marginTop:'5%',fontSize:20}}>
+              Nuk ka të dhëna!
+          </Text>
+
+        ) : (
+          <FlatList
         data={services}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
@@ -86,6 +95,9 @@ export default function Services() {
           </View>
         )}
       />
+        ) 
+      }
+      
     </View>
   );
 }

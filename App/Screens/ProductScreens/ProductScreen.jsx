@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, FlatList, Image, StyleSheet, Dimensions } from "react-native";
 import axiosClient from "../../axios";
 import Colors from "../../Utils/Colors";
+import { UserContext } from "../../store/UserContext";
+import Loader from "../Loader/Loader";
+
 
 const { width } = Dimensions.get('window');
 
@@ -9,17 +12,28 @@ export default function ProductScreen() {
   const [numColumns, setNumColumns] = useState(2);
   const [products, setProducts] = useState([]);
   const API_URL = process.env.REACT_NATIVE_API_URL;
+  const [isLoading, setIsLoading] = useState(false);
+ 
+
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
+    setIsLoading(true);
     try {
       const response = await axiosClient.get("/api/getProducts");
-      setProducts(response.data);
+      if(response.data.length < 1){
+        setIsLoading(true);
+      }else{
+        setProducts(response.data);
+        setIsLoading(false);
+      }
+      
     } catch (error) {
       console.error("Error fetching products:", error);
+      setIsLoading(false);
     }
   };
 
@@ -34,10 +48,22 @@ export default function ProductScreen() {
     }
   };
 
+  if(isLoading){
+    return <Loader/>
+  }
+
   return (
     <View style={[styles.container]}>
       <Text style={[styles.title,{marginTop:20,marginBottom:20}]}>Produktet</Text>
-      <FlatList
+      {products === null || products === undefined || products.length < 1 ? 
+        (
+          <Text 
+            style={{color:'white',textAlign:'center', marginTop:'5%',fontSize:20}}>
+              Nuk ka të dhëna!
+          </Text>
+        ):
+        (
+          <FlatList
         contentContainerStyle={styles.flatListContent}
         data={products}
         numColumns={numColumns}
@@ -59,6 +85,9 @@ export default function ProductScreen() {
         )}
         keyExtractor={(item) => item.id.toString()}
       />
+        )
+      }
+      
     </View>
   );
 }
@@ -99,7 +128,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: "column",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
   },
