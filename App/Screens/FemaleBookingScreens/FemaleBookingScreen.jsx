@@ -19,6 +19,7 @@ const FemaleAppointmentBookingScreen = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSendingRequest, setIsSendingRequest] = useState(false);
+  const [totalPagesa, setTotalPages] = useState(0);
   const {
     user,
     selectedBarber,
@@ -95,6 +96,10 @@ const FemaleAppointmentBookingScreen = () => {
   if(!selectedBarber || selectedBarber == null || selectedBarber == undefined){
     return <Loader />;
   }
+  useEffect(() =>{
+    const total = selectedService.reduce((sum, service) => sum + parseFloat(service.price), 0);
+    setTotalPages(total);
+  },[selectedService]);
 
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: Colors.WHITE }}>
@@ -103,6 +108,10 @@ const FemaleAppointmentBookingScreen = () => {
       <FemaleDateTimeSelection/>
       {error !== '' && <Text style={style.errorText}>{error}</Text>}
       {success !== '' && <Text style={style.success}>{success}</Text>}
+
+      {totalPagesa > 0 && (
+       <Text style={{ color:Colors.GOLD,fontWeight:'bold' }}>Totali: {totalPagesa}€ </Text>
+     )} 
       
       {!isSendingRequest ? (
       <TouchableOpacity

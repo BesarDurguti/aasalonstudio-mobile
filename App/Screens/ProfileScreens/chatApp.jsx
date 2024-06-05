@@ -183,11 +183,31 @@ const ChatScreen = () => {
     };
   }, []);
 
+  const initialOffset = Platform.OS === 'ios' ? 60 : 30;
+  const [keyboardOffset, setKeyboardOffset] = useState(initialOffset);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardOffset(initialOffset);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      if (Platform.OS === 'android') {
+        setKeyboardOffset(0);
+      }
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <KeyboardAvoidingView
     style={styles.container}
     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    keyboardVerticalOffset={60}
+    keyboardVerticalOffset={keyboardOffset}
     >
 
     

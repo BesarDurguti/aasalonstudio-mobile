@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -14,6 +15,8 @@ import Colors from "../../Utils/Colors";
 import { ChatAppointmentContext } from "../../store/ChatAppointment";
 
 const ChatUsers = () => {
+
+
   // Navigation to go back
   const navigation = useNavigation();
 
@@ -23,9 +26,11 @@ const ChatUsers = () => {
 
   //getting the users
   const [users, setUsers] = useState([]);
+  const [usersFiltered, setUsersFiltered] = useState([]);
+
   const { user } = useContext(UserContext);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (searchTerm) => {
     try {
       const response = await axiosClient.get("/api/users", {
         params: {
@@ -80,6 +85,10 @@ const ChatUsers = () => {
     };
   }, []);
 
+  useEffect(() =>{
+    setUsersFiltered(users);
+  },[users]);
+
   const navigateToChat = (user) => {
     // Navigate to the Chat
     navigation.navigate("Chat", {
@@ -102,6 +111,17 @@ const ChatUsers = () => {
     });
   };
 
+
+
+  const filterUsers = async (searchTerm) => {
+    const result = users.filter((user) => {
+      return user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+             user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+             (user.name.toLowerCase() + ' ' + user.username.toLowerCase()).includes(searchTerm.toLowerCase());
+    });
+    setUsersFiltered(result);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -114,6 +134,14 @@ const ChatUsers = () => {
         <Text style={styles.headerText}>Bisedat</Text>
       </View>
       <ScrollView style={styles.scrollView}>
+        {user.role === 'admin' || user.role === 'super' && (
+          <TextInput
+          style={{ backgroundColor: Colors.WHITE, width:'100%', borderRadius:10, padding:5, marginBottom:10 }}
+          placeholder="Kerko klientat..."
+          onChangeText={(text) => filterUsers(text)}
+        />
+        )}
+        
         {users === null || users === undefined || users.length < 1 ? 
           ( 
             <Text 
@@ -122,18 +150,11 @@ const ChatUsers = () => {
           </Text>
           ):
           (
-            users.map((user) => (
+            usersFiltered.map((user) => (
               <TouchableOpacity
                 key={user.id}
                 style={styles.userItem}
                 onPress={() => navigateToChat(user)}
-                // onPress={() =>
-                //   navigation.navigate("Chat", {
-                //     userId: user.id,
-                //     name: user.name,
-                //     username: user.username,
-                //   })
-                // }
               >
                 <Text style={styles.userName}>
                   {user.name} {user.username}
