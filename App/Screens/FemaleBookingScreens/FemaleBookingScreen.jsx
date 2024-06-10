@@ -96,11 +96,15 @@ const FemaleAppointmentBookingScreen = () => {
   if(!selectedBarber || selectedBarber == null || selectedBarber == undefined){
     return <Loader />;
   }
-  useEffect(() =>{
-    const total = selectedService.reduce((sum, service) => sum + parseFloat(service.price), 0);
-    setTotalPages(total);
-  },[selectedService]);
-
+  useEffect(() => {
+    if (Array.isArray(selectedService) && selectedService.length > 0) {
+      const total = selectedService.reduce((sum, service) => sum + parseFloat(service.price), 0);
+      setTotalPages(total);
+    } else {
+      setTotalPages(0); // or any default value you need when there are no services
+    }
+  }, [selectedService]);
+  
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: Colors.WHITE }}>
       <FemaleBarberInformation />
