@@ -137,6 +137,28 @@ export default function Sections() {
           color={user.gender === "male" ? Colors.WHITE : Colors.GOLD}
         />
       </TouchableOpacity>
+      <TouchableOpacity
+        style={[style.divSection, isPressed(4) && style.divSectionPressed]}
+        onPressIn={() => handlePressIn(4)}
+        onPressOut={() => handlePressOut(4)}
+        onPress={() => {}}
+      >
+        <Text
+          style={[
+            user.gender === "male"
+              ? style.settingsText
+              : style.settingsTextFemale,
+          ]}
+        >
+          Delete Account
+        </Text>
+        <MaterialIcons
+          style={style.iconStyle}
+          name="arrow-forward-ios"
+          size={20}
+          color={user.gender === "male" ? Colors.WHITE : Colors.GOLD}
+        />
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={logout}>
         <Text

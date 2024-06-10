@@ -94,12 +94,19 @@ const ServiceSelection = () => {
         setItems={setBarbers}
         style={[
           style.dropdown,
+          { backgroundColor: openBarberDropdown ? 'gray' : Colors.BLACK },
           openBarberDropdown && {
             marginBottom: marginBarbers,
           },
         ]}
-        textStyle={style.textStyle}
-        dropDownContainerStyle={style.dropdown}
+        textStyle={[
+          style.textStyle,
+          openBarberDropdown && style.textOpen,
+        ]}
+        dropDownContainerStyle={[
+          style.dropdown,
+          openBarberDropdown && style.dropdownOpen,
+        ]}
       />
 
       <Text
@@ -122,15 +129,22 @@ const ServiceSelection = () => {
         setItems={setServices}
         style={[
           style.dropdown,
+          { backgroundColor: openServiceDropdown ? 'gray' : Colors.BLACK },
           openServiceDropdown && {
             marginBottom: marginServices,
           },
         ]}
-        textStyle={style.textStyle}
-        dropDownContainerStyle={style.dropdownDrop}
         multiple={true}
         multipleText={formattedValue.join(", ")}
         tickColor="#ff0000" 
+        textStyle={[
+          style.textStyle,
+          openServiceDropdown && style.textOpen,
+        ]}
+        dropDownContainerStyle={[
+          style.dropdownDrop,
+          openServiceDropdown && style.dropdownOpen,
+        ]}
       />
     </View>
   );
@@ -154,6 +168,12 @@ const style = StyleSheet.create({
     borderColor: Colors.WHITE,
     backgroundColor: Colors.BLACK,
     color: Colors.WHITE,
+  },
+  dropdownOpen: {
+    backgroundColor: 'gray', // Gray background color when dropdown is open
+  },
+  textOpen: {
+    backgroundColor: 'gray', // Gray background color for text when dropdown is open
   },
 });
 
