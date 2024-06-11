@@ -1,8 +1,11 @@
-import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../../store/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
 
 export default function Workers() {
   const { barbers, setSelectedBarber } = useContext(UserContext);
@@ -16,7 +19,7 @@ export default function Workers() {
   };
 
   return (
-    <View style={{ marginTop: 30 }}>
+    <View style={isTablet ? {marginTop: 30, marginLeft: 45} : { marginTop: 30, }}>
       <Text
         style={{
           color: "white",
@@ -47,8 +50,8 @@ export default function Workers() {
               <Image
                 source={{ uri: API_URL + item.avatar }}
                 style={{
-                  height: 100,
-                  width: 100,
+                  height: isTablet ? 150 : 100,
+                  width: isTablet ? 150 : 100,
                   borderRadius: 100,
                 }}
               />

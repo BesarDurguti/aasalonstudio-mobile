@@ -1,7 +1,10 @@
-import { View, Image, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Image, Text, FlatList, TouchableOpacity, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../../store/UserContext";
 import { useNavigation } from "@react-navigation/native";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
 
 export default function Services() {
   const { services, selectedService, setSelectedService, setValue } =
@@ -50,7 +53,7 @@ export default function Services() {
               source={{ uri: API_URL + item.image }}
               style={{
                 aspectRatio: 1.55,
-                height: 220,
+                height: isTablet ? 350 : 220,
                 borderTopLeftRadius: 15,
                 borderTopRightRadius: 15,
                 marginTop: 10,

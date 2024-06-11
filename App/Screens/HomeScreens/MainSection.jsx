@@ -1,10 +1,13 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import MainSectionImg from "../../../assets/Images/Photos/header1.jpg";
 // import MainSectionImg from "../../../assets/Images/Photos/headerPhoto.jpg";
 
 import Colors from "../../Utils/Colors";
 import { UserContext } from "../../store/UserContext";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
 
 export default function MainSection() {
   const { siteInfos } = useContext(UserContext);
@@ -20,7 +23,7 @@ export default function MainSection() {
         }
         style={{
           width: "100%",
-          height: 250,
+          height: isTablet ? 400 : 250,
           borderWidth: 0.1,
           borderColor: "white",
           borderRadius: 30,

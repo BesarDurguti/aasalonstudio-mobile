@@ -1,10 +1,13 @@
 import React, {useState, useEffect } from "react";
-import { View, Text, Image, FlatList } from "react-native";
+import { View, Text, Image, FlatList, Dimensions } from "react-native";
 import axiosClient from "../../axios";
 
 import softGlamMakeup from "../../../assets/Images/Photos/glam2.png";
 import hairColorImage from "../../../assets/Images/Photos/hair-color.jpg";
 import haircutImage from "../../../assets/Images/Photos/Whaircut.jpg";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
 
 export default function FemaleFlatList() {
   const [flatlist, setFlatlist] = useState([]);
@@ -48,8 +51,8 @@ export default function FemaleFlatList() {
       <Image
         source={{ uri: API_URL + item.image}}
         style={{
-          height: 90,
-          width: 90,
+          height: isTablet ? 120 : 90,
+          width: isTablet ? 120 : 90,
           borderRadius: 100,
         }}
       />
