@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
@@ -15,6 +15,9 @@ import Colors from "../../Utils/Colors";
 import { UserContext } from "../../store/UserContext";
 
 const Tab = createBottomTabNavigator();
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
 
 // const section = 'female';
 
@@ -45,7 +48,7 @@ export default class TabNavigation extends Component {
           component={HomeScreen}
           options={{
             tabBarLabel: ({ color }) => (
-              <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
+              <Text style={isTablet ? {color: color, fontSize: 12, padding:15 }:{ color: color, fontSize: 12, marginTop: -7 }}>
                 Ballina
               </Text>
             ),
@@ -59,7 +62,7 @@ export default class TabNavigation extends Component {
           component={BookingComponent}
           options={{
             tabBarLabel: ({ color }) => (
-              <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
+              <Text style={isTablet ? {color: color, fontSize: 12, padding:15 }:{ color: color, fontSize: 12, marginTop: -7 }}>
                 Terminet
               </Text>
             ),
@@ -88,7 +91,7 @@ export default class TabNavigation extends Component {
           component={ProductComponent}
           options={{
             tabBarLabel: ({ color }) => (
-              <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
+              <Text style={isTablet ? {color: color, fontSize: 12, padding:15 }:{ color: color, fontSize: 12, marginTop: -7 }}>
                 Produktet
               </Text>
             ),
@@ -102,7 +105,7 @@ export default class TabNavigation extends Component {
           component={ProfileScreen}
           options={{
             tabBarLabel: ({ color }) => (
-              <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
+              <Text style={isTablet ? {color: color, fontSize: 12, padding:15 }:{ color: color, fontSize: 12, marginTop: -7 }}>
                 Profili
               </Text>
             ),
