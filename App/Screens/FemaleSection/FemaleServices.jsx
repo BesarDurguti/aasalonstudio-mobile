@@ -1,4 +1,4 @@
-import { View, Image, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Image, Text, FlatList, TouchableOpacity, Dimensions } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../../store/UserContext";
 import { useNavigation } from "@react-navigation/native";
@@ -7,6 +7,10 @@ import hairColoring from "../../../assets/Images/Photos/hairColoring.jpg";
 import makeup from "../../../assets/Images/Photos/makeup.jpg";
 
 import Colors from "../../Utils/Colors";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
+
 export default function FemaleServices() {
   const { services, selectedService, setSelectedService, setValue } =
     useContext(UserContext);
@@ -63,7 +67,7 @@ export default function FemaleServices() {
               source={{ uri: API_URL + item.image }}
               style={{
                 aspectRatio: 1.55,
-                height: 220,
+                height: isTablet ? 350 : 220,
                 borderTopLeftRadius: 15,
                 borderTopRightRadius: 15,
                 marginTop: 10,

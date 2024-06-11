@@ -141,7 +141,7 @@ export default function Sections() {
         style={[style.divSection, isPressed(4) && style.divSectionPressed]}
         onPressIn={() => handlePressIn(4)}
         onPressOut={() => handlePressOut(4)}
-        onPress={() => {}}
+        onPress={() => handleNavigate("DeleteAccount")}
       >
         <Text
           style={[

@@ -1,9 +1,12 @@
-import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import womanWorkers from "../../../assets/Images/Photos/womanWorkers.jpeg";
 import React, { useContext } from "react";
 import { UserContext } from "../../store/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
 
 export default function FemaleWorkers() {
   const { barbers, setSelectedBarber } = useContext(UserContext);
@@ -62,8 +65,8 @@ export default function FemaleWorkers() {
                 <Image
                   source={{ uri: API_URL + item.avatar }}
                   style={{
-                    height: 120,
-                    width: 120,
+                    height: isTablet ? 180 : 120,
+                    width: isTablet ? 180 : 120,
                     borderRadius: 6,
                     marginRight: 20,
                   }}

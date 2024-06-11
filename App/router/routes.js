@@ -14,6 +14,7 @@ import chatUsers from "../Screens/ProfileScreens/chatUsers";
 import ChangePassword from "../Screens/ProfileScreens/ChangePassword";
 import AppointmentsUser from "../Screens/ProfileScreens/AppointmentsUser";
 import AppointmentsAdmin from "../Screens/ProfileScreens/AppointmentsAdmin";
+import DeleteAccount from '../Screens/ProfileScreens/DeleteAccount';
 
 
 
@@ -55,6 +56,11 @@ const AppNavigator = () => {
             <Stack.Screen
               name="AppointmentsAdmin"
               component={AppointmentsAdmin}
+              options={{ headerShown: false, tabBarVisible: true }}
+            />
+            <Stack.Screen
+              name="DeleteAccount"
+              component={DeleteAccount}
               options={{ headerShown: false, tabBarVisible: true }}
             />
             
