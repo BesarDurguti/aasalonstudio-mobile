@@ -1,7 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Dimensions, Image } from "react-native";
 import Colors from "../../Utils/Colors";
 import { UserContext } from "../../store/UserContext";
+
+const { width } = Dimensions.get("window");
+const isTablet = width >= 600;
 
 const BarberInformation = () => {
   const { selectedBarber: barber } = useContext(UserContext);
@@ -11,7 +14,7 @@ const BarberInformation = () => {
     <View style={{ alignItems: "center" }}>
       <Image
         source={{ uri: API_URL + barber.avatar }}
-        style={{ width: 150, height: 150, borderRadius: 100 }}
+        style={isTablet ? { width: 250, height: 250, borderRadius: 150 } : { width: 150, height: 150, borderRadius: 100 }}
       />
       <Text
         style={{

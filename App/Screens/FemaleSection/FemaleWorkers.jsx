@@ -66,17 +66,18 @@ export default function FemaleWorkers() {
                   source={{ uri: API_URL + item.avatar }}
                   style={{
                     height: isTablet ? 180 : 120,
-                    width: isTablet ? 180 : 120,
+                    width: isTablet ? '40%' : 150,
                     borderRadius: 6,
                     marginRight: 20,
                   }}
                 />
-                <View>
+                <View style={{width: '50%',alignItems: 'center'}}>
                   <Text
                     style={{
                       color: Colors.GOLD,
                       fontFamily: 'outfit-r',
-                      fontSize: 20,
+                      fontSize: isTablet ? 25 : 18,
+                      textAlign: 'center'
                     }}
                   >
                     {item.name}

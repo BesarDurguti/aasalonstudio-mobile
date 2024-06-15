@@ -47,7 +47,7 @@ export default function FemaleFlatList() {
   const enableScroll = flatlist.length > 3;
 
   const renderItem = ({ item }) => (
-    <View style={{ marginRight: 38 }}>
+    <View style={isTablet ? {marginHorizontal:70, justifyContent: 'center'} : { paddingRight: 55 }}>
       <Image
         source={{ uri: API_URL + item.image}}
         style={{
