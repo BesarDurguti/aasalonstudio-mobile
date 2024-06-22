@@ -10,6 +10,7 @@ import {
   Platform,
   Keyboard,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -101,7 +102,7 @@ const Register = () => {
         },
       ]}
     >
-      <View
+      <ScrollView
         contentContainerStyle={styles.containers}
         keyboardShouldPersistTaps="handled"
         style={{ backgroundColor: Colors.BLACK }}
@@ -206,7 +207,7 @@ const Register = () => {
             )}
           </View>
         </View>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -233,6 +234,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     alignSelf: "center",
+    marginTop: "5%",
   },
   view: {
     marginTop: 15,
@@ -268,8 +270,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: Colors.GOLD,
     borderRadius: 15,
-    justifyContent:'center',
-    alignSelf:'center'
+    justifyContent: "center",
+    alignSelf: "center",
   },
   buttonText: {
     color: Colors.BLACK,

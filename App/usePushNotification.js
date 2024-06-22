@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { chatState } from "./Utils/Global";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -57,7 +58,7 @@ async function registerForPushNotificationsAsync() {
       alert("Failed to get push token for push notification!");
       return;
     }
-    
+
     token = await Notifications.getExpoPushTokenAsync({
       projectId: Constants?.expoConfig?.extra?.eas?.projectId,
     });
@@ -66,7 +67,7 @@ async function registerForPushNotificationsAsync() {
   }
 
   // console.log(token,'Jemi tek tokeni');
-  if(token !== undefined){
+  if (token !== undefined) {
     return token.data;
   }
 }
@@ -84,7 +85,9 @@ export default function usePushNotifications() {
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
+        if (chatState.inChat === false) {
+          setNotification(notification);
+        }
       });
 
     responseListener.current =

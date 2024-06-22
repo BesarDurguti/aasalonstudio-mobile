@@ -2,7 +2,7 @@
   "expo": {
     "name": "A&A Salon",
     "slug": "aasalon",
-    "version": "2.0.0",
+    "version": "2.0.3",
     "orientation": "portrait",
     "icon": "./assets/ios-icon-final.png",
     "userInterfaceStyle": "light",
@@ -14,9 +14,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aasalonstudio",
-      "buildNumber": "2.0.0"
+      "buildNumber": "2.0.3"
     },
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"
       },
