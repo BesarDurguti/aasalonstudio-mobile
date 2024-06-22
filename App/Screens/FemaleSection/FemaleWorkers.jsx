@@ -41,7 +41,9 @@ export default function FemaleWorkers() {
       ) :
       (
             <ScrollView style={{ marginTop: 20 }}>
-        {barbers.map((item, index) => (
+        {barbers
+        .filter(item => item.gender === 'female')
+        .map((item, index) => (
           <TouchableOpacity key={item.id} onPress={() => handleBarberClick(item.id)}>
             <View
               style={{
