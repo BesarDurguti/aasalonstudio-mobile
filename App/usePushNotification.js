@@ -85,7 +85,7 @@ export default function usePushNotifications() {
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        if (chatState.inChat === false) {
+        if (global.isOnChat === false) {
           setNotification(notification);
         }
       });

@@ -10,7 +10,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
@@ -18,7 +17,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import axiosClient from "../../axios";
 import { UserContext } from "../../store/UserContext";
 import { ChatAppointmentContext } from "../../store/ChatAppointment";
-import { chatState } from "../../Utils/Global";
 
 const ChatScreen = () => {
   // Ref for ScrollView
@@ -40,19 +38,18 @@ const ChatScreen = () => {
   const [receiverName, setReceiverName] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-
-  const [firstTimeDown, setFirstTimeDown] = useState(true);
-
   // const [incomingMessages, setIncomingMessages] = useState({});
   const { incomingMessages, setIsFocusedChatApp, setIsOnChatApp } = useContext(
     ChatAppointmentContext
   );
 
-  const initialOffset = Platform.OS === "ios" ? 60 : 30;
-  const [keyboardOffset, setKeyboardOffset] = useState(initialOffset);
+  useEffect(() => {
+    global.isOnChat = true; // Set global variable when component mounts
+
+    return () => {
+      global.isOnChat = false; // Unset global variable when component unmounts
+    };
+  }, []);
 
   const readMessages = async (userId) => {
     try {
@@ -64,38 +61,51 @@ const ChatScreen = () => {
     }
   };
 
-  const [contentHeight, setContentHeight] = useState(0);
-  const [scrollViewHeight, setScrollViewHeight] = useState(0);
-  const [prevContentHeight, setPrevContentHeight] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    setIsFocusedChatApp(true);
+    setIsOnChatApp(true);
+    return () => {
+      readMessages(user.id);
+      setIsFocusedChatApp(false);
+      setIsOnChatApp(false);
+    };
+  }, []);
 
-  const handleScroll = async (event) => {
-    const currentScrollY = event.nativeEvent.contentOffset.y;
-    setScrollY(currentScrollY); // Store the scroll position
-
-    if (currentScrollY < 5 && hasMore && !loading) {
-      setLoading(true);
-      await loadMoreMessages(currentScrollY);
-      setLoading(false);
+  //every time the selectedUserId changes , so the person changes we fetch the history
+  useEffect(() => {
+    const { userId, name, username } = route.params || {};
+    if (userId) {
+      setSelectedUserId(userId);
+      setReceiverUsername(username);
+      setReceiverName(name);
     }
-  };
+    fetchChatHistory();
+  }, [selectedUserId]);
 
-  const loadMoreMessages = async (currentScrollY) => {
-    const currentScrollOffset = currentScrollY;
-    setPrevContentHeight(contentHeight);
+  useEffect(() => {
+    if (incomingMessages && Object.keys(incomingMessages).length > 0) {
+      if (incomingMessages.userId === selectedUserId) {
+        // console.log('Jemi ne incoming messages .....');
+        // console.log(messages, incomingMessages);
+        if (messages.length > 0) {
+          const lastMessageIndex = messages.length - 1;
 
-    await fetchChatHistory(currentPage + 1);
+          const newMessage = {
+            id: messages[lastMessageIndex].id + 1,
+            message: incomingMessages.message,
+            read: false,
+            recipient_id: incomingMessages.receiverId,
+            user_id: incomingMessages.userId,
+          };
 
-    setTimeout(() => {
-      const heightDifference = contentHeight - prevContentHeight;
-      scrollViewRef.current.scrollTo({
-        y: currentScrollOffset + heightDifference,
-        animated: false,
-      });
-    }, 0);
-  };
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+      }
+    }
+  }, [incomingMessages]);
 
-  const fetchChatHistory = async (page = 1) => {
+  //Take chat history from backend
+  const fetchChatHistory = async () => {
     if (!selectedUserId) return;
 
     try {
@@ -103,29 +113,13 @@ const ChatScreen = () => {
         params: {
           sender_id: user.id,
           receiver_id: selectedUserId,
-          page: page,
         },
       });
-      const reversedMessages = response.data.messages.reverse();
-      const pageCurrent = response.data.pagination.current_page;
       if (response.data.messages) {
-        if (pageCurrent === 1) {
-          setMessages(response.data.messages);
-        } else {
-          setMessages((prevMessages) => [
-            ...response.data.messages,
-            ...prevMessages,
-          ]);
-        }
-        setCurrentPage(pageCurrent);
-        setHasMore(response.data.messages.length > 0);
+        const reversedMessages = response.data.messages.reverse();
+        setMessages(response.data.messages);
+        // console.log(response.data.messages);
       }
-      setTimeout(() => {
-        if (firstTimeDown) {
-          goDown();
-          setFirstTimeDown(false);
-        }
-      }, 200);
     } catch (err) {
       console.log(err.response.data);
     }
@@ -171,69 +165,20 @@ const ChatScreen = () => {
         console.log(err);
       }
     }
-    setTimeout(() => {
-      goDown();
-    }, 10);
   };
 
   //navigate go back
   const handleGoBack = () => {
+    global.isOnChat = false;
     navigation.goBack();
   };
 
-  function goDown() {
-    scrollViewRef.current.scrollToEnd({ animated: true });
-  }
-
+  // Scroll to bottom when messages change(everytime we type or send message , or receive it)
   useEffect(() => {
-    setIsFocusedChatApp(true);
-    setIsOnChatApp(true);
-    return () => {
-      readMessages(user.id);
-      setIsFocusedChatApp(false);
-      setIsOnChatApp(false);
-    };
-  }, []);
-
-  //every time the selectedUserId changes , so the person changes we fetch the history
-  useEffect(() => {
-    chatState.inChat = true;
-    const { userId, name, username } = route.params || {};
-    if (userId) {
-      setSelectedUserId(userId);
-      setReceiverUsername(username);
-      setReceiverName(name);
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: false });
     }
-    fetchChatHistory();
-    return () => {
-      chatState.inChat = false; // Optionally reset inChat to false when leaving chat
-    };
-  }, [selectedUserId]);
-
-  useEffect(() => {
-    if (incomingMessages && Object.keys(incomingMessages).length > 0) {
-      if (incomingMessages.userId === selectedUserId) {
-        // console.log('Jemi ne incoming messages .....');
-        // console.log(messages, incomingMessages);
-        if (messages.length > 0) {
-          const lastMessageIndex = messages.length - 1;
-
-          const newMessage = {
-            id: messages[lastMessageIndex].id + 1,
-            message: incomingMessages.message,
-            read: false,
-            recipient_id: incomingMessages.receiverId,
-            user_id: incomingMessages.userId,
-          };
-
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
-        }
-      }
-    }
-    setTimeout(() => {
-      goDown();
-    }, 10);
-  }, [incomingMessages]);
+  }, [messages]);
 
   useEffect(() => {
     // Add event listener for keyboard opening
@@ -247,6 +192,9 @@ const ChatScreen = () => {
       keyboardDidShowListener.remove();
     };
   }, []);
+
+  const initialOffset = Platform.OS === "ios" ? 60 : 30;
+  const [keyboardOffset, setKeyboardOffset] = useState(initialOffset);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -271,34 +219,6 @@ const ChatScreen = () => {
     };
   }, []);
 
-  // Scroll to bottom when messages change(everytime we type or send message , or receive it)
-  // useEffect(() => {
-  //   if (scrollViewRef.current) {
-  //     console.log("A po hyjm qetu 1:");
-  //     scrollViewRef.current.scrollToEnd({ animated: false });
-  //   }
-  // }, [messages]);
-
-  //Take chat history from backend
-  // const fetchChatHistory = async (page = 1) => {
-  //   if (!selectedUserId) return;
-
-  //   try {
-  //     const response = await axiosClient.get("/api/messages", {
-  //       params: {
-  //         sender_id: user.id,
-  //         receiver_id: selectedUserId,
-  //       },
-  //     });
-  //     if (response.data.messages) {
-  //       setMessages(response.data.messages);
-  //       // console.log(response.data.messages);
-  //     }
-  //   } catch (err) {
-  //     console.log(err.response.data);
-  //   }
-  // };
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -319,21 +239,10 @@ const ChatScreen = () => {
         <ScrollView
           style={styles.chatArea}
           ref={scrollViewRef} // Attach ref to ScrollView
-          onScroll={handleScroll}
-          onContentSizeChange={(width, height) => {
-            setPrevContentHeight(contentHeight);
-            setContentHeight(height);
-          }}
-          onLayout={(event) =>
-            setScrollViewHeight(event.nativeEvent.layout.height)
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({ animated: false })
           }
-          scrollEventThrottle={16}
         >
-          {loading && (
-            <View style={styles.loadingIndicator}>
-              <ActivityIndicator size={30} color="white" />
-            </View>
-          )}
           {messages.map((message) => (
             <View
               key={message.id}
@@ -369,9 +278,6 @@ const ChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  loadingIndicator: {
-    padding: 10,
-  },
   container: {
     flex: 1,
     backgroundColor: "#000",

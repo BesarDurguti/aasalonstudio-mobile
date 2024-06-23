@@ -7,6 +7,8 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Colors from "../../Utils/Colors";
 import LogoGold from "../../../assets/Images/Logo/logo2Gold.png";
@@ -74,119 +76,123 @@ const VerifyCode = () => {
   };
 
   return (
-    <View
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        backgroundColor: Colors.BLACK,
-      }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Image source={LogoGold} style={textStyles.image} />
-      <Text style={textStyles.headerTitle}>Verifikoni llogarinë</Text>
-      <View style={textStyles.view}>
-        <Text
-          style={{
-            fontFamily: "outfit-md",
-            color: Colors.GOLD,
-            marginBottom: 4,
-            fontSize: 14,
-          }}
-        >
-          Numri
-        </Text>
-        <TextInput
-          style={textStyles.inputsDefault}
-          value={phone}
-          editable={false}
-        />
+      <View
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100%",
+          backgroundColor: Colors.BLACK,
+        }}
+      >
+        <Image source={LogoGold} style={textStyles.image} />
+        <Text style={textStyles.headerTitle}>Verifikoni llogarinë</Text>
+        <View style={textStyles.view}>
+          <Text
+            style={{
+              fontFamily: "outfit-md",
+              color: Colors.GOLD,
+              marginBottom: 4,
+              fontSize: 14,
+            }}
+          >
+            Numri
+          </Text>
+          <TextInput
+            style={textStyles.inputsDefault}
+            value={phone}
+            editable={false}
+          />
 
-        <Text
-          style={{
-            fontFamily: "outfit-md",
-            color: Colors.GOLD,
-            marginBottom: 4,
-            fontSize: 14,
-          }}
-        >
-          Kodi
-        </Text>
-        <TextInput
-          style={textStyles.inputsDefault}
-          value={code}
-          onChangeText={(text) => setCode(text)}
-        />
+          <Text
+            style={{
+              fontFamily: "outfit-md",
+              color: Colors.GOLD,
+              marginBottom: 4,
+              fontSize: 14,
+            }}
+          >
+            Kodi
+          </Text>
+          <TextInput
+            style={textStyles.inputsDefault}
+            value={code}
+            onChangeText={(text) => setCode(text)}
+          />
 
-        {error ? (
-          <Text style={{ color: "red", marginBottom: 10 }}>{error}</Text>
-        ) : null}
+          {error ? (
+            <Text style={{ color: "red", marginBottom: 10 }}>{error}</Text>
+          ) : null}
 
-        {!isSendingRequest ? (
-          <TouchableOpacity style={textStyles.buttons} onPress={verifyAcc}>
-            <Text
-              style={{
-                color: Colors.BLACK,
-                textAlign: "center",
-                fontFamily: "outfit-md",
-                fontSize: 16,
-              }}
-            >
-              Verifikohu
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={textStyles.buttons}>
-            <Text
-              style={{
-                color: Colors.BLACK,
-                textAlign: "center",
-                fontFamily: "outfit-md",
-                fontSize: 16,
-                justifyContent:'center',
-                alignSelf:'center'
-              }}
-            >
-              <ActivityIndicator size="small" color={Colors.BLACK} />
-            </Text>
-          </TouchableOpacity>
-        )}
+          {!isSendingRequest ? (
+            <TouchableOpacity style={textStyles.buttons} onPress={verifyAcc}>
+              <Text
+                style={{
+                  color: Colors.BLACK,
+                  textAlign: "center",
+                  fontFamily: "outfit-md",
+                  fontSize: 16,
+                }}
+              >
+                Verifikohu
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={textStyles.buttons}>
+              <Text
+                style={{
+                  color: Colors.BLACK,
+                  textAlign: "center",
+                  fontFamily: "outfit-md",
+                  fontSize: 16,
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <ActivityIndicator size="small" color={Colors.BLACK} />
+              </Text>
+            </TouchableOpacity>
+          )}
 
-        <View
-          style={{
-            marginTop: 20,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <TouchableOpacity onPress={navigateToLogin}>
-            <Text
-              style={{
-                fontFamily: "outfit-md",
-                color: Colors.GOLD,
-                marginBottom: 10,
-                fontSize: 14,
-              }}
-            >
-              Kyqu
-            </Text>
-          </TouchableOpacity>
+          <View
+            style={{
+              marginTop: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity onPress={navigateToLogin}>
+              <Text
+                style={{
+                  fontFamily: "outfit-md",
+                  color: Colors.GOLD,
+                  marginBottom: 10,
+                  fontSize: 14,
+                }}
+              >
+                Kyqu
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity onPress={navigateToRegister}>
-            <Text
-              style={{
-                fontFamily: "outfit-md",
-                color: Colors.GOLD,
-                marginBottom: 10,
-                fontSize: 14,
-              }}
-            >
-              Regjistrohu
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={navigateToRegister}>
+              <Text
+                style={{
+                  fontFamily: "outfit-md",
+                  color: Colors.GOLD,
+                  marginBottom: 10,
+                  fontSize: 14,
+                }}
+              >
+                Regjistrohu
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
