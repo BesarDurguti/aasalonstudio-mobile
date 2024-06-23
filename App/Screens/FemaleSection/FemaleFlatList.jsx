@@ -1,5 +1,5 @@
 import React, {useState, useEffect } from "react";
-import { View, Text, Image, FlatList, Dimensions } from "react-native";
+import { View, Text, Image, FlatList, Dimensions, Platform } from "react-native";
 import axiosClient from "../../axios";
 
 import softGlamMakeup from "../../../assets/Images/Photos/glam2.png";
@@ -47,7 +47,7 @@ export default function FemaleFlatList() {
   const enableScroll = flatlist.length > 3;
 
   const renderItem = ({ item }) => (
-    <View style={isTablet ? {marginHorizontal:70, justifyContent: 'center'} : { paddingRight: 55 }}>
+    <View style={isTablet ? {marginHorizontal:70, justifyContent: 'center'} : { paddingRight: Platform.OS === 'android' ? 55 : 35}}>
       <Image
         source={{ uri: API_URL + item.image}}
         style={{
