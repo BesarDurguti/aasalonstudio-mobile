@@ -10,6 +10,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
@@ -24,6 +25,7 @@ const AppointmentsAdmin = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { user, barbers } = useContext(UserContext);
 
@@ -39,6 +41,19 @@ const AppointmentsAdmin = () => {
   useEffect(() => {
     appointmentsAdminFetch();
   }, []);
+
+  const loadData = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      appointmentsAdminFetch();
+    }, 2000);
+  };
+
+  const onRefresh = () => {
+    // Load data when user pulls down to refresh
+    loadData();
+  };
 
   const appointmentsAdminFetch = async () => {
     try {
@@ -156,6 +171,13 @@ const AppointmentsAdmin = () => {
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefresh}
+            colors={[Colors.BLACK]}
+          />
+        }
       >
         <View style={styles.section}>
           <Text
