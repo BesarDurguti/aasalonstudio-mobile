@@ -17,6 +17,7 @@
       "buildNumber": "2.0.6"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#ffffff"

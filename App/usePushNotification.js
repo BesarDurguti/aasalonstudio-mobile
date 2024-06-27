@@ -55,7 +55,9 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
+      alert(
+        "Për të marrë njoftime, ju lutemi kyçuni përsëri dhe lejoni njoftimet në settings të telefonit."
+      );
       return;
     }
 

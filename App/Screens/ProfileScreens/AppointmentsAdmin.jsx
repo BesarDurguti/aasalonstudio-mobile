@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../Utils/Colors";
@@ -17,13 +17,15 @@ import LogoGold from "../../../assets/Images/Logo/logo2Gold.png";
 import axiosClient from "../../axios";
 import { Ionicons } from "@expo/vector-icons";
 import { UserContext } from "../../store/UserContext";
+import Loader from "../Loader/Loader";
 
 const AppointmentsAdmin = () => {
   const [appointments, setAppointments] = useState([]);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { user, barbers, } = useContext(UserContext);
+  const { user, barbers } = useContext(UserContext);
 
   const [usersAll, setUsersAll] = useState([]);
 
@@ -32,28 +34,26 @@ const AppointmentsAdmin = () => {
   // Function to navigate to the Register screen
   const navigateBack = () => {
     navigation.goBack();
-  }
+  };
 
   useEffect(() => {
     appointmentsAdminFetch();
   }, []);
 
   const appointmentsAdminFetch = async () => {
-
     try {
-      const response = await axiosClient.get(`/api/getAppointmentsAdmin/${user.id}`);
+      const response = await axiosClient.get(
+        `/api/getAppointmentsAdmin/${user.id}`
+      );
 
-      if (response.data != '') {
-        const user = response.data.map(appointment => appointment.user);
+      if (response.data != "") {
+        const user = response.data.map((appointment) => appointment.user);
         setAppointments(response.data);
         setUsersAll(user);
         // console.log("Successfully fetched data", response.data);
-        setError('');
-      } else {
-        // Handle login failure
-        // console.log("No appointments found:", response.data);
-        // setError('No appointments found.');
+        setError("");
       }
+      setIsLoading(false);
     } catch (err) {
       console.error(
         "Failed to fetch appointments:",
@@ -62,43 +62,45 @@ const AppointmentsAdmin = () => {
         err.response.data
       );
       setError("Failed to fetch appointments.");
+      setIsLoading(false);
     }
   };
-  
 
-  const isAppointmentActive = (appointment) =>{
-    const appointmentDateTime = new Date(appointment.date+ 'T' +appointment.time);
+  const isAppointmentActive = (appointment) => {
+    const appointmentDateTime = new Date(
+      appointment.date + "T" + appointment.time
+    );
     const currentDateTime = new Date();
     const twoHoursBeforeAppointment = new Date(appointmentDateTime);
     twoHoursBeforeAppointment.setHours(appointmentDateTime.getHours() - 2);
 
     return {
-        isActive: currentDateTime < appointmentDateTime,
-        currentDateTime,
-        twoHoursBeforeAppointment
-      };
+      isActive: currentDateTime < appointmentDateTime,
+      currentDateTime,
+      twoHoursBeforeAppointment,
+    };
   };
-  
 
-  const cancelAppointmentAdmin = async (appointment) =>{
+  const cancelAppointmentAdmin = async (appointment) => {
     // console.log(appointment);
-    if(!appointment){
+    if (!appointment) {
       setError("Ka ndodhur nje gabim!");
       return;
     }
-    const { isActive } =
-    isAppointmentActive(appointment);
+    const { isActive } = isAppointmentActive(appointment);
     try {
-      if(isActive){
-        const response = await axiosClient.post(`/api/cancelAppointmentAdmin/${appointment.id}`);
-        if(response.data.success){
+      if (isActive) {
+        const response = await axiosClient.post(
+          `/api/cancelAppointmentAdmin/${appointment.id}`
+        );
+        if (response.data.success) {
           setSuccess("Termini u anulua me sukses.");
           appointmentsAdminFetch();
         }
-      }else{
-        setError("Termini nuk është aktiv.")
+      } else {
+        setError("Termini nuk është aktiv.");
       }
-      } catch (error) {
+    } catch (error) {
       console.error(
         "Failed to cancel appointment:",
         error.response,
@@ -106,9 +108,9 @@ const AppointmentsAdmin = () => {
         error.response.data
       );
     }
-  }
+  };
 
-const confirmCancelAppointment = (appointment) => {
+  const confirmCancelAppointment = (appointment) => {
     Alert.alert(
       "Konfirmimi",
       "A jeni i sigurt që dëshironi të anuloni termin?",
@@ -125,63 +127,120 @@ const confirmCancelAppointment = (appointment) => {
       { cancelable: true }
     );
   };
- 
-  const activeAppointments = appointments.filter(appointment => isAppointmentActive(appointment).isActive);
-  const inActiveAppointment = appointments.filter(appointment => !isAppointmentActive(appointment).isActive);
+
+  const activeAppointments = appointments.filter(
+    (appointment) => isAppointmentActive(appointment).isActive
+  );
+  const inActiveAppointment = appointments.filter(
+    (appointment) => !isAppointmentActive(appointment).isActive
+  );
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
-    <View style={[user.gender === 'male' ? styles.container : styles.containerFemale ]}>
-      <View style={[user.gender === 'male' ? styles.header : styles.headerFemale]}>
+    <View
+      style={[
+        user.gender === "male" ? styles.container : styles.containerFemale,
+      ]}
+    >
+      <View
+        style={[user.gender === "male" ? styles.header : styles.headerFemale]}
+      >
         <TouchableOpacity onPress={navigateBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Terminet e berberit</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.contentContainer} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.section}>
-          <Text style={[user.gender === 'male' ? styles.sectionTitle : styles.sectionTitleFemale]}>Terminet e pa përfunduara</Text>
+          <Text
+            style={[
+              user.gender === "male"
+                ? styles.sectionTitle
+                : styles.sectionTitleFemale,
+            ]}
+          >
+            Terminet e pa përfunduara
+          </Text>
           {activeAppointments.length > 0 ? (
             activeAppointments.map((appointment, index) => {
-              const users = usersAll.find(users => users.id === appointment.customer_id) || { name: 'Unknown User' };
+              const users = usersAll.find(
+                (users) => users.id === appointment.customer_id
+              ) || { name: "Unknown User" };
               return (
-                <TouchableOpacity key={index} onPress={() => confirmCancelAppointment(appointment)} style={[user.gender === 'male' ? styles.card : styles.cardFemale]}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => confirmCancelAppointment(appointment)}
+                  style={[
+                    user.gender === "male" ? styles.card : styles.cardFemale,
+                  ]}
+                >
                   <View style={styles.cardContent}>
                     <Text style={styles.cardText}>
-                      {`${user.gender === "male" ? `Klienti` : `Klientja`}: ${users.name} - ${new Date(appointment.date).toLocaleDateString('en-GB')} - ${appointment.time}`}
+                      {` ${users.name} ${users.username} - ${new Date(
+                        appointment.date
+                      ).toLocaleDateString("en-GB")} - ${appointment.time}`}
                     </Text>
-                   
+
                     <Ionicons
                       name="close-circle-outline"
                       size={30}
                       color="red"
                     />
-                </View>
-                  </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
               );
             })
           ) : (
             <Text style={styles.noAppointmentText}>Nuk keni termine </Text>
           )}
-          {error !== '' && <Text style={styles.errorText}>{error}</Text>}
-          {success !== '' && <Text style={styles.success}>{success}</Text>}
+          {error !== "" && <Text style={styles.errorText}>{error}</Text>}
+          {success !== "" && <Text style={styles.success}>{success}</Text>}
         </View>
         <View style={styles.section}>
-          <Text style={[user.gender === 'male' ? styles.sectionTitle : styles.sectionTitleFemale]}>Terminet e përfunduara</Text>
+          <Text
+            style={[
+              user.gender === "male"
+                ? styles.sectionTitle
+                : styles.sectionTitleFemale,
+            ]}
+          >
+            Terminet e përfunduara
+          </Text>
           {inActiveAppointment.length > 0 ? (
             inActiveAppointment.map((appointment, index) => {
-              const users = usersAll.find(users => users.id === appointment.customer_id) || { name: 'Unknown User' };
+              const users = usersAll.find(
+                (users) => users.id === appointment.customer_id
+              ) || { name: "Unknown User" };
               return (
-                <View key={index} style={[user.gender === 'male' ? styles.card : styles.cardFemale , user.gender === 'male' ? styles.inactiveCard : styles.inactiveCardFemale]}>
+                <View
+                  key={index}
+                  style={[
+                    user.gender === "male" ? styles.card : styles.cardFemale,
+                    user.gender === "male"
+                      ? styles.inactiveCard
+                      : styles.inactiveCardFemale,
+                  ]}
+                >
                   <View style={styles.cardContent}>
                     <Text style={[styles.inactiveCardText]}>
-                      {`${users.name} ${users.username} - ${new Date(appointment.date).toLocaleDateString('en-GB')} - ${appointment.time}`}
+                      {`${users.name} ${users.username} - ${new Date(
+                        appointment.date
+                      ).toLocaleDateString("en-GB")} - ${appointment.time}`}
                     </Text>
                   </View>
                 </View>
               );
             })
           ) : (
-            <Text style={styles.noAppointmentText}>Nuk keni termine te përfunduara</Text>
+            <Text style={styles.noAppointmentText}>
+              Nuk keni termine te përfunduara
+            </Text>
           )}
         </View>
       </ScrollView>
@@ -195,10 +254,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.BLACK,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.BLACK,
-    paddingTop: Platform.OS === 'ios' ? 40 : 20,
+    paddingTop: Platform.OS === "ios" ? 40 : 20,
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
@@ -206,9 +265,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   headerText: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   contentContainer: {
     paddingVertical: 20,
@@ -218,19 +277,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    fontFamily: 'outfit-md',
+    fontFamily: "outfit-md",
     color: Colors.WHITE,
     fontSize: 18,
     marginBottom: 10,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
     marginBottom: 10,
     ...Platform.select({
       ios: {
-        shadowColor: 'black',
+        shadowColor: "black",
         shadowOpacity: 0.1,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 6,
@@ -241,38 +300,38 @@ const styles = StyleSheet.create({
     }),
   },
   cardContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   cardText: {
-    fontFamily: 'outfit-md',
-    color: 'green',
+    fontFamily: "outfit-md",
+    color: "green",
     fontSize: 16,
   },
   inactiveCard: {
     backgroundColor: Colors.WHITE,
   },
   inactiveCardText: {
-    fontFamily: 'outfit-md',
+    fontFamily: "outfit-md",
     color: Colors.BLACK,
     fontSize: 16,
   },
   noAppointmentText: {
-    fontFamily: 'outfit-md',
-    color: 'gray',
+    fontFamily: "outfit-md",
+    color: "gray",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   errorText: {
-    fontFamily: 'outfit-md',
-    color: 'red',
+    fontFamily: "outfit-md",
+    color: "red",
     fontSize: 16,
     marginTop: 10,
   },
   success: {
-    fontFamily: 'outfit-md',
-    color: 'green',
+    fontFamily: "outfit-md",
+    color: "green",
     fontSize: 16,
     marginTop: 10,
   },
@@ -282,16 +341,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.WHITE,
   },
   headerFemale: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.GOLD,
-    paddingTop: Platform.OS === 'ios' ? 40 : 20,
+    paddingTop: Platform.OS === "ios" ? 40 : 20,
     paddingHorizontal: 20,
     paddingBottom: 10,
   },
- 
+
   sectionTitleFemale: {
-    fontFamily: 'outfit-md',
+    fontFamily: "outfit-md",
     color: Colors.BLACK,
     fontSize: 18,
     marginBottom: 10,
@@ -317,6 +376,5 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.GOLD,
   },
 });
-
 
 export default AppointmentsAdmin;

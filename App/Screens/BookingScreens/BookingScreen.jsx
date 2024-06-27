@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import BarberInformation from "./BarberInformation";
 import ServiceSelection from "./ServiceSelection";
@@ -16,7 +17,6 @@ import { useNavigation } from "@react-navigation/native";
 import Loader from "../Loader/Loader";
 
 const AppointmentBookingScreen = () => {
-  
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSendingRequest, setIsSendingRequest] = useState(false);
@@ -34,7 +34,6 @@ const AppointmentBookingScreen = () => {
     setValue,
   } = useContext(UserContext);
 
-  
   const navigation = useNavigation();
 
   const handleRemoveInputDatas = async () => {
@@ -82,11 +81,15 @@ const AppointmentBookingScreen = () => {
         handleRemoveInputDatas();
         setError("");
         setSuccess("Termini u caktua me sukses");
+        Alert.alert(
+          `Termini u caktua me sukses, për datën ${selectedDate}, kohën: ${selectedTime}.`
+        );
         setIsSendingRequest(false);
       } catch (err) {
         if (err.response.data.status === "pending") {
           setSuccess("");
           setError(err.response.data.errors);
+          Alert.alert(err.response.data.errors);
           setIsSendingRequest(false);
         }
       }
@@ -96,13 +99,20 @@ const AppointmentBookingScreen = () => {
     }
   };
 
-  if(!selectedBarber || selectedBarber == null || selectedBarber == undefined){
+  if (
+    !selectedBarber ||
+    selectedBarber == null ||
+    selectedBarber == undefined
+  ) {
     return <Loader />;
   }
 
   useEffect(() => {
     if (Array.isArray(selectedService) && selectedService.length > 0) {
-      const total = selectedService.reduce((sum, service) => sum + parseFloat(service.price), 0);
+      const total = selectedService.reduce(
+        (sum, service) => sum + parseFloat(service.price),
+        0
+      );
       setTotalPages(total);
     } else {
       setTotalPages(0); // or any default value you need when there are no services
@@ -117,9 +127,11 @@ const AppointmentBookingScreen = () => {
       {error !== "" && <Text style={style.errorText}>{error}</Text>}
       {success !== "" && <Text style={style.success}>{success}</Text>}
 
-     {totalPagesa > 0 && (
-       <Text style={{ color:'white',fontWeight:'bold' }}>Totali: {totalPagesa}€ </Text>
-     )} 
+      {totalPagesa > 0 && (
+        <Text style={{ color: "white", fontWeight: "bold" }}>
+          Totali: {totalPagesa}€{" "}
+        </Text>
+      )}
 
       {!isSendingRequest ? (
         <TouchableOpacity
@@ -148,8 +160,8 @@ const AppointmentBookingScreen = () => {
               textAlign: "center",
               fontFamily: "outfit-md",
               fontSize: 16,
-              justifyContent:'center',
-              alignSelf:'center'
+              justifyContent: "center",
+              alignSelf: "center",
             }}
           >
             <ActivityIndicator size="small" color={Colors.BLACK} />

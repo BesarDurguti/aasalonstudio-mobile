@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import FemaleBarberInformation from "./FemaleBarberInformation";
 import FemaleServiceSelection from "./FemaleServiceSelection";
@@ -80,11 +81,15 @@ const FemaleAppointmentBookingScreen = () => {
         handleRemoveInputDatas();
         setError("");
         setSuccess("Termini u caktua me sukses");
+        Alert.alert(
+          `Termini u caktua me sukses, për datën ${selectedDate}, kohën: ${selectedTime}.`
+        );
         setIsSendingRequest(false);
       } catch (err) {
         if (err.response.data.status === "pending") {
           setSuccess("");
           setError(err.response.data.errors);
+          Alert.alert(err.response.data.errors);
           setIsSendingRequest(false);
         }
       }
@@ -93,64 +98,73 @@ const FemaleAppointmentBookingScreen = () => {
       setError("Ju lutemi mbushini fushat!");
     }
   };
-  if(!selectedBarber || selectedBarber == null || selectedBarber == undefined){
+  if (
+    !selectedBarber ||
+    selectedBarber == null ||
+    selectedBarber == undefined
+  ) {
     return <Loader />;
   }
   useEffect(() => {
     if (Array.isArray(selectedService) && selectedService.length > 0) {
-      const total = selectedService.reduce((sum, service) => sum + parseFloat(service.price), 0);
+      const total = selectedService.reduce(
+        (sum, service) => sum + parseFloat(service.price),
+        0
+      );
       setTotalPages(total);
     } else {
       setTotalPages(0); // or any default value you need when there are no services
     }
   }, [selectedService]);
-  
+
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: Colors.WHITE }}>
       <FemaleBarberInformation />
       <FemaleServiceSelection />
-      <FemaleDateTimeSelection/>
-      {error !== '' && <Text style={style.errorText}>{error}</Text>}
-      {success !== '' && <Text style={style.success}>{success}</Text>}
+      <FemaleDateTimeSelection />
+      {error !== "" && <Text style={style.errorText}>{error}</Text>}
+      {success !== "" && <Text style={style.success}>{success}</Text>}
 
       {totalPagesa > 0 && (
-       <Text style={{ color:Colors.GOLD,fontWeight:'bold' }}>Totali: {totalPagesa}€ </Text>
-     )} 
-      
-      {!isSendingRequest ? (
-      <TouchableOpacity
-        style={style.buttons}
-        onPress={() => handleMakeAppointment()}
-      >
-        <Text
-          style={{
-            color: Colors.WHITE,
-            textAlign: "center",
-            fontFamily: "outfit-md",
-            fontSize: 16,
-          }}
-        >
-          Cakto Terminin
+        <Text style={{ color: Colors.GOLD, fontWeight: "bold" }}>
+          Totali: {totalPagesa}€{" "}
         </Text>
-      </TouchableOpacity>
+      )}
+
+      {!isSendingRequest ? (
+        <TouchableOpacity
+          style={style.buttons}
+          onPress={() => handleMakeAppointment()}
+        >
+          <Text
+            style={{
+              color: Colors.WHITE,
+              textAlign: "center",
+              fontFamily: "outfit-md",
+              fontSize: 16,
+            }}
+          >
+            Cakto Terminin
+          </Text>
+        </TouchableOpacity>
       ) : (
         <TouchableOpacity
-        style={style.buttons}
-        onPress={() => handleMakeAppointment()}
-      >
-        <Text
-          style={{
-            color: Colors.WHITE,
-            textAlign: "center",
-            fontFamily: "outfit-md",
-            fontSize: 16,
-            justifyContent:'center',
-            alignSelf:'center'
-          }}
+          style={style.buttons}
+          onPress={() => handleMakeAppointment()}
         >
-         <ActivityIndicator size="small" color={Colors.WHITE} />
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: Colors.WHITE,
+              textAlign: "center",
+              fontFamily: "outfit-md",
+              fontSize: 16,
+              justifyContent: "center",
+              alignSelf: "center",
+            }}
+          >
+            <ActivityIndicator size="small" color={Colors.WHITE} />
+          </Text>
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -166,14 +180,14 @@ const style = StyleSheet.create({
     borderRadius: 13,
   },
   errorText: {
-    fontFamily: 'outfit-md',
-    color: 'red',
+    fontFamily: "outfit-md",
+    color: "red",
     fontSize: 16,
     marginTop: 10,
   },
   success: {
-    fontFamily: 'outfit-md',
-    color: 'green',
+    fontFamily: "outfit-md",
+    color: "green",
     fontSize: 16,
     marginTop: 10,
   },
